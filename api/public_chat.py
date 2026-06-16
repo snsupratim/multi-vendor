@@ -120,7 +120,8 @@ async def public_chat(
 
         result = await RAGService.ask(
             question=payload.question,
-            workspace_id=api_context["workspace_id"]
+            workspace_id=api_context["workspace_id"],
+            model_name=payload.model
         )
 
         answer_text = result["answer"]
@@ -183,6 +184,7 @@ async def public_chat(
             api_key_id=api_context["api_key_id"],
             vendor_id=api_context["vendor_id"],
             workspace_id=api_context["workspace_id"],
+            model_name=payload.model,
             endpoint="/v1/public/chat",
             input_tokens=input_tokens,
             output_tokens=output_tokens,
@@ -211,6 +213,7 @@ async def public_chat(
             api_key_id=api_context["api_key_id"],
             vendor_id=api_context["vendor_id"],
             workspace_id=api_context["workspace_id"],
+            model_name=payload.model,
             endpoint="/v1/public/chat",
             input_tokens=0,
             output_tokens=0,

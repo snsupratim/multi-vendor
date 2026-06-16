@@ -18,6 +18,7 @@ class UsageService:
         api_key_id: str,
         vendor_id: str,
         workspace_id: str,
+        model_name: str,
         endpoint: str,
         input_tokens: int,
         output_tokens: int,
@@ -38,6 +39,7 @@ class UsageService:
                 "vendor_id": vendor_id,
 
                 "workspace_id": workspace_id,
+                "model": model_name,
 
                 "endpoint": endpoint,
 

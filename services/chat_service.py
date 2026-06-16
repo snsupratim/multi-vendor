@@ -4,6 +4,9 @@ from core.config import settings
 
 from loguru import logger
 import sentry_sdk
+from services.model_router import (
+    ModelRouter
+)
 
 genai.configure(
     api_key=settings.GEMINI_API_KEY
@@ -19,7 +22,8 @@ class ChatService:
     @staticmethod
     def generate_answer(
         question: str,
-        contexts: list
+        contexts: list,
+        model_name: str = "gemini-2.5-flash"
     ):
 
         try:
@@ -44,17 +48,18 @@ Question:
 Answer:
 """
 
-            response = model.generate_content(
-                prompt
+            answer = ModelRouter.generate(
+            prompt=prompt,
+            model_name=model_name
             )
             
 
-            return response.text
+            return answer
 
         except Exception as e:
 
             logger.exception(
-                "Gemini generation failed"
+                "generation failed"
             )
 
             sentry_sdk.capture_exception(

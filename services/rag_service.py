@@ -18,7 +18,8 @@ class RAGService:
     @staticmethod
     async def ask(
         question: str,
-        workspace_id: str
+        workspace_id: str,
+        model_name: str
     ):
 
         try:
@@ -43,7 +44,8 @@ class RAGService:
 
             answer = ChatService.generate_answer(
                     question,
-                    chunks
+                    chunks,
+                    model_name=model_name
                 )
         
 

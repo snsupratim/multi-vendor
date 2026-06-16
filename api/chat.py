@@ -32,6 +32,7 @@ async def chat(
     return (
         RAGService.ask(
             payload.question,
-            payload.workspace_id
+            payload.workspace_id,
+            payload.model
         )
     )

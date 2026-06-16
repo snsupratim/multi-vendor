@@ -25,6 +25,14 @@ from api.public_chat import (
 from api.redis_test import (
     router as redis_test_router
 )
+from api.api_keys import (
+    router as api_key_router
+)
+
+from api.models import (
+    router as model_router
+)
+# from services.model_router import ModelRouter
 
 
 from middleware.logging_middleware import (
@@ -37,6 +45,14 @@ init_sentry()
 app = FastAPI(
     title="Multi Tenant RAG Platform"
 )
+
+
+# print(
+#     ModelRouter.generate(
+#         prompt="What is Python?",
+#         model_name="llama-3.3-70b-versatile"
+#     )
+# )
 
 app.include_router(auth_router)
 app.include_router(vendor_router)
@@ -66,6 +82,10 @@ app.include_router(
 
 app.include_router(
     redis_test_router
+)
+
+app.include_router(
+    model_router
 )
 
 app.add_middleware(

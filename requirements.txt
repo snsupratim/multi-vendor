@@ -32,3 +32,4 @@ tenacity
 tiktoken
 
 pydantic[email]
+sentry-sdk==2.62.0

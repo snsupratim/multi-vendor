@@ -5,7 +5,22 @@ from api.vendors import router as vendor_router
 from api.workspaces import (
     router as workspace_router
 )
+from api.documents import (
+    router as document_router
+)
+from api.chat import (
+    router as chat_router
+)
+from core.monitoring import (
+    init_sentry
+)
+from middleware.logging_middleware import (
+    LoggingMiddleware
+)
 
+
+
+init_sentry()
 
 app = FastAPI(
     title="Multi Tenant RAG Platform"
@@ -17,6 +32,21 @@ app.include_router(
     workspace_router
 )
 
+app.include_router(
+    document_router
+)
+
+
+
+app.include_router(
+    chat_router
+)
+
+
+app.add_middleware(
+    LoggingMiddleware
+)
+
 
 @app.get("/health")
 async def health():
@@ -24,3 +54,8 @@ async def health():
         "status": "ok"
     }
 
+@app.get("/test-sentry")
+async def test_sentry():
+    raise Exception(
+        "Sentry Test Error"
+    )

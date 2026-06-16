@@ -22,10 +22,14 @@ from api.public_chat import (
     router as public_chat_router
 )
 
+from api.redis_test import (
+    router as redis_test_router
+)
+
+
 from middleware.logging_middleware import (
     LoggingMiddleware
 )
-
 
 
 init_sentry()
@@ -60,6 +64,10 @@ app.include_router(
     public_chat_router
 )
 
+app.include_router(
+    redis_test_router
+)
+
 app.add_middleware(
     LoggingMiddleware
 )
@@ -76,3 +84,4 @@ async def test_sentry():
     raise Exception(
         "Sentry Test Error"
     )
+

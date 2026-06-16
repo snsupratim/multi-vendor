@@ -1,5 +1,3 @@
-import hashlib
-
 from fastapi import Header, HTTPException
 
 from services.api_key_service import ApiKeyService
@@ -18,10 +16,10 @@ async def get_api_key_context(
             detail="Invalid API Key"
         )
 
-    if api_key["status"] != "ACTIVE":
+    if api_key.get("status") != "ACTIVE":
         raise HTTPException(
             status_code=403,
-            detail="API Key is disabled"
+            detail="API Key is inactive"
         )
 
     return api_key

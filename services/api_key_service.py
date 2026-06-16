@@ -76,17 +76,18 @@ class ApiKeyService:
 
             "subscription": {
 
-                "tier": "FREE",
+    "tier": "FREE",
 
-                "requests_per_hour": 500,
+    "requests_per_minute": 20,
 
-                "input_tokens_per_day": 100000,
+    "requests_per_hour": 500,
 
-                "output_tokens_per_day": 100000,
+    "input_tokens_per_day": 100000,
 
-                "monthly_cost_limit_usd": 10
+    "output_tokens_per_day": 100000,
 
-            },
+    "monthly_cost_limit_usd": 10
+},
 
             "created_by": user["sub"],
 

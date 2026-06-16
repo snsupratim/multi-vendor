@@ -14,6 +14,14 @@ from api.chat import (
 from core.monitoring import (
     init_sentry
 )
+from api.api_keys import (
+    router as api_key_router
+)
+
+from api.public_chat import (
+    router as public_chat_router
+)
+
 from middleware.logging_middleware import (
     LoggingMiddleware
 )
@@ -42,6 +50,15 @@ app.include_router(
     chat_router
 )
 
+
+app.include_router(
+    api_key_router
+)
+
+
+app.include_router(
+    public_chat_router
+)
 
 app.add_middleware(
     LoggingMiddleware

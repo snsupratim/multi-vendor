@@ -1,0 +1,16 @@
+2026-07-22 22:42:58.924 | INFO     | services.rag_service:ask:33 - Question received workspace=f39246e4-e5f4-43a1-abc9-3331357420c0
+2026-07-22 22:43:00.205 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 chunks=5
+2026-07-22 22:43:00.205 | INFO     | services.rag_service:ask:45 - Retrieved 5 chunks workspace=f39246e4-e5f4-43a1-abc9-3331357420c0
+2026-07-22 22:43:02.039 | INFO     | middleware.logging_middleware:dispatch:30 - POST /chat status=200 time=3.12s
+2026-07-22 22:43:21.509 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs status=200 time=0.04s
+2026-07-22 22:43:30.931 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs status=200 time=0.04s
+2026-07-22 22:44:06.409 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs/vendor/901c8e7c-b238-45d1-96bb-0d51eefe2bc6 status=200 time=0.04s
+2026-07-22 22:45:10.400 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs/workspace/f39246e4-e5f4-43a1-abc9-3331357420c0 status=200 time=0.04s
+2026-07-22 22:48:16.503 | INFO     | services.rag_service:ask:36 - Question received workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=a590cc64-4ccb-41d5-bca6-4a2ada5c3f12 vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-22 22:48:18.471 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 chunks=5
+2026-07-22 22:48:18.471 | INFO     | services.rag_service:ask:50 - Retrieved 5 chunks workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=a590cc64-4ccb-41d5-bca6-4a2ada5c3f12 vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-22 22:48:19.583 | INFO     | middleware.logging_middleware:dispatch:30 - POST /chat status=200 time=3.72s
+2026-07-22 22:48:51.345 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs/vendor/901c8e7c-b238-45d1-96bb-0d51eefe2bc6 status=200 time=0.03s
+2026-07-22 22:49:27.903 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs/session/a590cc64-4ccb-41d5-bca6-4a2ada5c3f12 status=200 time=0.04s
+2026-07-22 22:49:33.332 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs status=200 time=0.05s
+2026-07-22 23:35:00.913 | ERROR    | core.apm:capture_exception:29 - APM captured exception: APM Test Error

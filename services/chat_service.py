@@ -3,7 +3,7 @@ import google.generativeai as genai
 from core.config import settings
 
 from loguru import logger
-import sentry_sdk
+from core.apm import APMService
 from services.model_router import (
     ModelRouter
 )
@@ -20,10 +20,13 @@ model = genai.GenerativeModel(
 class ChatService:
 
     @staticmethod
-    def generate_answer(
+    async def generate_answer(
         question: str,
         contexts: list,
-        model_name: str = "gemini-2.5-flash"
+        model_family: str = "gemini",
+        model_name: str = "gemini-2.5-flash",
+        system_prompt: str = None,
+        history: str = None
     ):
 
         try:
@@ -33,23 +36,28 @@ class ChatService:
                     for c in contexts
                 ]
             )
+            
+            sys_msg = system_prompt if system_prompt else "You are a helpful assistant."
+            
+            history_section = f"\nConversation History:\n{history}\n" if history else ""
 
             prompt = f"""
-You are a helpful assistant.
+{sys_msg}
 
 Use ONLY the provided context.
 
 Context:
 {context_text}
-
+{history_section}
 Question:
 {question}
 
 Answer:
 """
 
-            answer = ModelRouter.generate(
+            answer = await ModelRouter.generate(
             prompt=prompt,
+            model_family=model_family,
             model_name=model_name
             )
             
@@ -62,8 +70,9 @@ Answer:
                 "generation failed"
             )
 
-            sentry_sdk.capture_exception(
-                e
+            APMService.capture_exception(
+                e,
+                context={"model_name": model_name, "model_family": model_family}
             )
 
             raise

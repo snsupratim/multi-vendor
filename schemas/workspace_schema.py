@@ -12,6 +12,11 @@ class WorkspaceCreate(BaseModel):
     )
 
     description: Optional[str] = None
+    system_prompt: Optional[str] = None
+
+
+class WorkspaceUpdatePrompt(BaseModel):
+    system_prompt: str
 
 
 class WorkspaceResponse(BaseModel):
@@ -19,3 +24,4 @@ class WorkspaceResponse(BaseModel):
     vendor_id: str
     name: str
     status: str
+    system_prompt: Optional[str] = None

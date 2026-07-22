@@ -29,10 +29,15 @@ async def chat(
     )
 ):
 
-    return (
+    import uuid
+    session_id = payload.session_id if payload.session_id else str(uuid.uuid4())
+
+    return await (
         RAGService.ask(
             payload.question,
             payload.workspace_id,
-            payload.model
+            payload.model_family,
+            payload.model_name,
+            session_id
         )
     )

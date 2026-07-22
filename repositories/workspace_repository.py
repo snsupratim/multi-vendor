@@ -52,3 +52,14 @@ class WorkspaceRepository:
                 "name": workspace_name
             }
         )
+
+    @classmethod
+    async def update_workspace(
+        cls,
+        workspace_id: str,
+        update_data: dict
+    ):
+        await cls.collection.update_one(
+            {"workspace_id": workspace_id},
+            {"$set": update_data}
+        )

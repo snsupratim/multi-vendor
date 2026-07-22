@@ -1,7 +1,3 @@
-from services.model_registry import (
-    SUPPORTED_MODELS
-)
-
 from services.providers.gemini_provider import (
     GeminiProvider
 )
@@ -10,27 +6,32 @@ from services.providers.groq_provider import (
     GroqProvider
 )
 
+from repositories.model_repository import (
+    ModelRepository
+)
+
 
 class ModelRouter:
 
     @staticmethod
-    def generate(
+    async def generate(
         *,
         prompt: str,
+        model_family: str,
         model_name: str
     ):
 
-        if model_name not in SUPPORTED_MODELS:
+        model = await ModelRepository.get_by_name_and_family(
+            model_name,
+            model_family
+        )
 
+        if not model:
             raise ValueError(
-                f"Unsupported model: {model_name}"
+                f"Unsupported model: {model_name} in family {model_family}"
             )
 
-        provider = (
-            SUPPORTED_MODELS[
-                model_name
-            ]["provider"]
-        )
+        provider = model.get("provider", "").lower()
 
         if provider == "gemini":
 

@@ -46,7 +46,8 @@ class WorkspaceService:
             "created_by": user["sub"],
             "created_at": datetime.now(
                 timezone.utc
-            )
+            ),
+            "system_prompt": getattr(payload, "system_prompt", None)
         }
 
         await WorkspaceRepository.create_workspace(
@@ -77,7 +78,23 @@ class WorkspaceService:
                 "vendor_id": workspace["vendor_id"],
                 "name": workspace["name"],
                 "description": workspace.get("description"),
-                "status": workspace["status"]
+                "status": workspace["status"],
+                "system_prompt": workspace.get("system_prompt")
             })
 
         return response
+
+    @staticmethod
+    async def update_prompt(
+        workspace_id: str,
+        system_prompt: str
+    ):
+        workspace = await WorkspaceRepository.get_by_workspace_id(workspace_id)
+        if not workspace:
+            raise ValueError("Workspace not found")
+            
+        await WorkspaceRepository.update_workspace(
+            workspace_id,
+            {"system_prompt": system_prompt}
+        )
+        return {"message": "System prompt updated successfully"}

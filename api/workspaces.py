@@ -58,3 +58,23 @@ async def get_vendor_workspaces(
         await WorkspaceService
         .get_vendor_workspaces(vendor_id)
     )
+
+from schemas.workspace_schema import WorkspaceUpdatePrompt
+
+@router.patch("/{workspace_id}/prompt")
+async def update_workspace_prompt(
+    workspace_id: str,
+    payload: WorkspaceUpdatePrompt,
+    user=Depends(get_current_user)
+):
+    try:
+        require_super_admin(user)
+        return await WorkspaceService.update_prompt(
+            workspace_id,
+            payload.system_prompt
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )

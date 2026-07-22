@@ -16,3 +16,10 @@ logger.add(
     retention="10 days",
     level="INFO"
 )
+
+from core.mongo_sink import mongo_sink_handler
+
+logger.add(
+    mongo_sink_handler,
+    level="INFO"
+)

@@ -17,6 +17,10 @@ from services.document_service import (
     DocumentService
 )
 
+from schemas.document_schema import (
+    JsonDocumentRequest
+)
+
 UPLOAD_DIR = "uploads"
 
 router = APIRouter(
@@ -71,3 +75,19 @@ async def upload_document(
         status_code=400,
         detail=str(e)
     )
+
+@router.post("/upload/json")
+async def upload_json_document(
+    payload: JsonDocumentRequest,
+    user=Depends(get_current_user)
+):
+    try:
+        return await DocumentService.ingest_json_document(
+            payload=payload,
+            uploaded_by=user["sub"]
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )

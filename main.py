@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI
+import core.logger  # Initialize global loguru configuration
 
 from api.auth import router as auth_router
 from api.vendors import router as vendor_router
@@ -11,9 +12,7 @@ from api.documents import (
 from api.chat import (
     router as chat_router
 )
-from core.monitoring import (
-    init_sentry
-)
+
 from api.api_keys import (
     router as api_key_router
 )
@@ -36,11 +35,11 @@ from api.models import (
 
 
 from middleware.logging_middleware import (
-    LoggingMiddleware
+    APMMiddleware
 )
 
 
-init_sentry()
+
 
 app = FastAPI(
     title="Multi Tenant RAG Platform"
@@ -88,9 +87,23 @@ app.include_router(
     model_router
 )
 
-app.add_middleware(
-    LoggingMiddleware
+from api.logs import router as logs_router
+app.include_router(
+    logs_router
 )
+
+app.add_middleware(
+    APMMiddleware
+)
+
+import asyncio
+from core.mongo_sink import start_mongo_logger
+from core.apm import start_apm_worker
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(start_mongo_logger())
+    asyncio.create_task(start_apm_worker())
 
 
 @app.get("/health")
@@ -99,9 +112,9 @@ async def health():
         "status": "ok"
     }
 
-@app.get("/test-sentry")
-async def test_sentry():
+@app.get("/test-apm")
+async def test_apm():
     raise Exception(
-        "Sentry Test Error"
+        "APM Test Error"
     )
 

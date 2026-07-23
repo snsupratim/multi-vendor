@@ -18,9 +18,8 @@ A highly scalable, multi-tenant AI backend designed to act as the "Central Brain
   * **Long-Term (MongoDB)**: Permanent archiving of all chat logs for analytics.
   * **Auto-Rehydration**: Seamlessly restores context into Redis when a user resumes a chat days later.
 * **Multi-LLM Asynchronous Router**: Dynamically routes prompts to different LLMs (Google Gemini 2.5 Flash, Groq Llama-3) based on payload configuration. Fully non-blocking async architecture.
-* **Dual-Authentication Chat Layers**:
+* **Chat Layers**:
   * **Internal (`/module-chat`)**: Tokenless, JWT-bypassed internal endpoint optimized for server-to-server or authenticated CRM integrations.
-  * **Public (`/v1/public/module-chat`)**: Strict rate-limited, billable endpoints secured via `X-API-Key` for external developer integrations.
 * **Custom APM & Zero-Blocking Analytics**: A proprietary background `deque` worker processes logs, exceptions, and latency metrics directly into MongoDB without stalling the FastAPI event loop.
 
 ---
@@ -96,10 +95,25 @@ Once the server is running, you can access the automatic interactive API documen
 
 #### Chat Interfaces
 - `POST /module-chat` - Internal RAG querying endpoint.
-- `POST /v1/public/module-chat` - External, API-key secured RAG endpoint.
 
 ---
 
 ## 🛡️ Security
 
 This platform strictly segregates tenant data. Vector queries are strictly filtered at the Supabase database layer using `workspace_id` matching, preventing data leakage across Modules. Vendors are verified via MongoDB mapping (`VendorAccessRepository`) before any embedding retrieval occurs.
+
+
+
+## Diagram
+
+SUPER-ADMIN
+  MODULES
+    PAYROLL,FINANCE,CRM,C&F etc.
+  TENANTS
+    Onboard Companies who can access this chat endpoint via module ui application
+
+SYSTEM FLOW:
+  USER ASK QUERY 
+  -> EMBED TO VECTOR AND PERFORM SEARCH IN VECTOR DB FOR RETIEVING SIMILAR VECTOR 
+  -> CREATE CONTEXT (HOT AND COLD MEMORY OF MONGO & REDIS)
+  -> PASS TO LLM TO GENERATE RESPONSE

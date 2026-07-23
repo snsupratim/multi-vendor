@@ -385,3 +385,13 @@ ValueError: Unknown provider
 2026-07-23 09:31:46.646 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 chunks=5
 2026-07-23 09:31:46.646 | INFO     | services.rag_service:ask:50 - Retrieved 5 chunks workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=fcc0124c-6e14-4933-bf5e-834b0d8ac00b vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
 2026-07-23 09:31:50.451 | INFO     | middleware.logging_middleware:dispatch:24 - POST /chat status=200 time=6781ms
+2026-07-23 21:32:27.270 | INFO     | middleware.logging_middleware:dispatch:24 - POST /auth/login status=200 time=2174ms
+2026-07-23 21:33:19.044 | INFO     | middleware.logging_middleware:dispatch:24 - GET /vendors status=200 time=35ms
+2026-07-23 21:36:08.287 | INFO     | middleware.logging_middleware:dispatch:24 - GET /modules status=200 time=751ms
+2026-07-23 21:37:03.235 | INFO     | services.module_rag_service:ask:26 - Module Question received workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=c743da9d-0082-407a-8279-d872fde458a1 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 21:37:05.528 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c chunks=5
+2026-07-23 21:37:05.528 | INFO     | services.module_rag_service:ask:31 - Retrieved 5 chunks workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=c743da9d-0082-407a-8279-d872fde458a1 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 21:37:06.986 | INFO     | middleware.logging_middleware:dispatch:24 - POST /module-chat status=200 time=3831ms
+2026-07-23 21:38:34.481 | INFO     | middleware.logging_middleware:dispatch:24 - GET /models status=200 time=47ms
+2026-07-23 21:38:48.135 | INFO     | middleware.logging_middleware:dispatch:24 - GET /logs status=200 time=95ms
+2026-07-23 21:39:27.676 | ERROR    | core.apm:capture_exception:29 - APM captured exception: APM Test Error

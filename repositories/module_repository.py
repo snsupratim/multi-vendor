@@ -22,3 +22,11 @@ class ModuleRepository:
     @classmethod
     async def get_by_module_id(cls, module_id: str):
         return await cls.collection.find_one({"module_id": module_id})
+
+    @classmethod
+    async def get_all_modules(cls):
+        cursor = cls.collection.find({})
+        modules = await cursor.to_list(length=None)
+        for mod in modules:
+            mod["_id"] = str(mod["_id"])
+        return modules

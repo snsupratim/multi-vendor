@@ -9,3 +9,7 @@ class ModuleService:
     @staticmethod
     async def grant_vendor_access(vendor_id: str, module_id: str):
         await VendorAccessRepository.grant_access(vendor_id, module_id)
+
+    @staticmethod
+    async def get_all_modules():
+        return await ModuleRepository.get_all_modules()

@@ -7,6 +7,11 @@ import json
 
 router = APIRouter(prefix="/modules", tags=["Modules (Global)"])
 
+@router.get("")
+async def get_all_modules(user=Depends(get_current_user)):
+    require_super_admin(user)
+    return await ModuleService.get_all_modules()
+
 @router.post("", response_model=ModuleResponse)
 async def create_module(payload: ModuleCreate, user=Depends(get_current_user)):
     require_super_admin(user)
@@ -46,3 +51,34 @@ async def upload_module_json(module_id: str, payload: dict, user=Depends(get_cur
         return {"message": "JSON processed for module successfully", "chunks_created": result["chunks_created"]}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+from schemas.document_schema import SqlSchemaRequest
+
+@router.post("/{module_id}/documents/schema")
+async def upload_module_schema(module_id: str, payload: dict, user=Depends(get_current_user)):
+    require_super_admin(user)
+    
+    table_name = payload.get("table_name", "")
+    schema_ddl = payload.get("schema_ddl", "")
+    
+    if not table_name or not schema_ddl:
+        raise HTTPException(status_code=400, detail="Missing table_name or schema_ddl")
+        
+    schema_request = SqlSchemaRequest(
+        workspace_id=module_id,
+        vendor_id="00000000-0000-0000-0000-000000000000",
+        table_name=table_name,
+        schema_ddl=schema_ddl,
+        description=payload.get("description", ""),
+        relationships=payload.get("relationships", "")
+    )
+    
+    try:
+        result = await DocumentService.ingest_sql_schema(
+            payload=schema_request,
+            uploaded_by=user["sub"]
+        )
+        return {"message": "SQL Schema processed for module successfully", "chunks_created": result["chunks_created"]}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+

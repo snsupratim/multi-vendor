@@ -148,3 +148,64 @@ class DocumentService:
             "document_id": document_id,
             "chunks_created": len(chunks)
         }
+
+    @staticmethod
+    async def ingest_sql_schema(
+        payload,
+        uploaded_by: str
+    ):
+        
+        document_id = str(uuid.uuid4())
+        
+        full_content = f"Table Name: {payload.table_name}\nDescription: {payload.description}\nSchema DDL:\n{payload.schema_ddl}\nRelationships:\n{payload.relationships}"
+        
+        embedding = EmbeddingService.get_embedding(full_content)
+        
+        row = {
+            "id": str(uuid.uuid4()),
+            "vendor_id": payload.vendor_id,
+            "workspace_id": payload.workspace_id,
+            "document_id": document_id,
+            "chunk_id": 0,
+            "content": full_content,
+            "embedding": embedding,
+            "file_name": f"SQL Schema - {payload.table_name}",
+            "document_type": "SQL_SCHEMA",
+            "module": None,
+            "sub_module": None,
+            "metadata": {
+                "table_name": payload.table_name,
+                "description": payload.description,
+                "relationships": payload.relationships
+            },
+            "source": "API"
+        }
+
+        VectorStoreService.bulk_insert([row])
+
+        await (
+            DocumentRepository
+            .create_document(
+                {
+                    "document_id": document_id,
+                    "vendor_id": payload.vendor_id,
+                    "workspace_id": payload.workspace_id,
+                    "file_name": f"SQL Schema - {payload.table_name}",
+                    "document_type": "SQL_SCHEMA",
+                    "chunk_count": 1,
+                    "uploaded_by": uploaded_by,
+                    "created_at": datetime.now(timezone.utc)
+                }
+            )
+        )
+
+        logger.info(
+            f"SQL Schema uploaded "
+            f"workspace={payload.workspace_id} "
+            f"table={payload.table_name}"
+        )
+
+        return {
+            "document_id": document_id,
+            "chunks_created": 1
+        }

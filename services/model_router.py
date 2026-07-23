@@ -32,25 +32,20 @@ class ModelRouter:
             )
 
         provider = model.get("provider", "").lower()
+        family = model_family.lower()
 
-        if provider == "gemini":
-
-            return (
-                GeminiProvider.generate(
-                    prompt=prompt,
-                    model_name=model_name
-                )
+        if provider == "google" or family == "gemini":
+            return await GeminiProvider.generate(
+                prompt=prompt,
+                model_name=model_name
             )
 
-        if provider == "groq":
-
-            return (
-                GroqProvider.generate(
-                    prompt=prompt,
-                    model_name=model_name
-                )
+        if provider == "groq" or family == "llama" or family == "groq":
+            return await GroqProvider.generate(
+                prompt=prompt,
+                model_name=model_name
             )
 
         raise ValueError(
-            "Unknown provider"
+            f"Unknown provider or family routing for provider='{provider}', family='{family}'"
         )

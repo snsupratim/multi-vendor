@@ -1,8 +1,8 @@
-from groq import Groq
+from groq import AsyncGroq
 
 from core.config import settings
 
-client = Groq(
+client = AsyncGroq(
     api_key=settings.GROQ_API_KEY
 )
 
@@ -10,24 +10,20 @@ client = Groq(
 class GroqProvider:
 
     @staticmethod
-    def generate(
+    async def generate(
         *,
         prompt: str,
         model_name: str
     ):
 
-        response = (
-            client.chat.completions.create(
-
-                model=model_name,
-
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
-            )
+        response = await client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
 
         return (

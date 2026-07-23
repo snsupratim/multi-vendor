@@ -92,6 +92,14 @@ app.include_router(
     logs_router
 )
 
+from api.modules import router as modules_router
+from api.module_chat import router as module_chat_router
+from api.public_module_chat import router as public_module_chat_router
+
+app.include_router(modules_router)
+app.include_router(module_chat_router)
+app.include_router(public_module_chat_router)
+
 app.add_middleware(
     APMMiddleware
 )

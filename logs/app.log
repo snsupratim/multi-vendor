@@ -14,3 +14,374 @@
 2026-07-22 22:49:27.903 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs/session/a590cc64-4ccb-41d5-bca6-4a2ada5c3f12 status=200 time=0.04s
 2026-07-22 22:49:33.332 | INFO     | middleware.logging_middleware:dispatch:30 - GET /logs status=200 time=0.05s
 2026-07-22 23:35:00.913 | ERROR    | core.apm:capture_exception:29 - APM captured exception: APM Test Error
+2026-07-23 00:03:18.329 | INFO     | middleware.logging_middleware:dispatch:24 - POST /auth/login status=200 time=1372ms
+2026-07-23 00:05:56.326 | INFO     | middleware.logging_middleware:dispatch:24 - POST /modules status=200 time=64ms
+2026-07-23 00:09:47.614 | INFO     | middleware.logging_middleware:dispatch:24 - POST /modules/f9646e20-b937-4ced-9cc2-b883cf4e066c/documents/json status=400 time=8ms
+2026-07-23 00:14:02.574 | ERROR    | core.apm:capture_exception:29 - APM captured exception: {'message': 'invalid input syntax for type uuid: "GLOBAL_MODULE"', 'code': '22P02', 'hint': None, 'details': None}
+2026-07-23 00:16:14.466 | INFO     | services.document_service:ingest_json_document:140 - JSON Document uploaded workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c document=59053681-1eb6-4e02-b4e1-4c909f44705c chunks=1
+2026-07-23 00:16:14.466 | INFO     | middleware.logging_middleware:dispatch:24 - POST /modules/f9646e20-b937-4ced-9cc2-b883cf4e066c/documents/json status=200 time=2497ms
+2026-07-23 00:18:31.855 | INFO     | middleware.logging_middleware:dispatch:24 - POST /vendors status=200 time=88ms
+2026-07-23 00:18:47.653 | INFO     | middleware.logging_middleware:dispatch:24 - POST /modules/f9646e20-b937-4ced-9cc2-b883cf4e066c/grant status=200 time=80ms
+2026-07-23 00:20:45.643 | ERROR    | core.apm:capture_exception:29 - APM captured exception: 'vendor_id'
+2026-07-23 00:22:37.920 | ERROR    | core.apm:capture_exception:29 - APM captured exception: Signature verification failed.
+2026-07-23 00:26:14.994 | INFO     | services.module_rag_service:ask:26 - Module Question received workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=bf7a08f7-d24b-4c52-924f-32874e8e4b83 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:26:16.946 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c chunks=1
+2026-07-23 00:26:16.946 | INFO     | services.module_rag_service:ask:31 - Retrieved 1 chunks workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=bf7a08f7-d24b-4c52-924f-32874e8e4b83 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:26:18.296 | INFO     | middleware.logging_middleware:dispatch:24 - POST /module-chat status=200 time=3988ms
+2026-07-23 00:30:43.767 | INFO     | services.document_service:ingest_json_document:140 - JSON Document uploaded workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c document=39aa8a92-93d2-42aa-b4e4-4173093794ae chunks=4
+2026-07-23 00:30:43.772 | INFO     | middleware.logging_middleware:dispatch:24 - POST /modules/f9646e20-b937-4ced-9cc2-b883cf4e066c/documents/json status=200 time=3601ms
+2026-07-23 00:33:01.900 | INFO     | services.module_rag_service:ask:26 - Module Question received workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=b79f8172-002f-4098-971e-fda195e6aedd vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:33:03.287 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c chunks=5
+2026-07-23 00:33:03.287 | INFO     | services.module_rag_service:ask:31 - Retrieved 5 chunks workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=b79f8172-002f-4098-971e-fda195e6aedd vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:33:04.187 | INFO     | middleware.logging_middleware:dispatch:24 - POST /module-chat status=200 time=2366ms
+2026-07-23 00:33:21.747 | INFO     | services.module_rag_service:ask:26 - Module Question received workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=3c628b55-a2be-4f1a-b25d-613f4bfd2479 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:33:22.730 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c chunks=5
+2026-07-23 00:33:22.730 | INFO     | services.module_rag_service:ask:31 - Retrieved 5 chunks workspace=f9646e20-b937-4ced-9cc2-b883cf4e066c session=3c628b55-a2be-4f1a-b25d-613f4bfd2479 vendor=83d01718-3d8e-4155-84d3-e3c02fe8cad6
+2026-07-23 00:33:23.844 | INFO     | middleware.logging_middleware:dispatch:24 - POST /module-chat status=200 time=2166ms
+2026-07-23 09:21:32.139 | INFO     | middleware.logging_middleware:dispatch:24 - POST /auth/login status=200 time=1066ms
+2026-07-23 09:21:49.583 | INFO     | middleware.logging_middleware:dispatch:24 - POST /models status=200 time=89ms
+2026-07-23 09:23:28.847 | INFO     | services.rag_service:ask:36 - Question received workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=d34ce989-5dfb-4f96-997e-844a2300d307 vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-23 09:23:31.323 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 chunks=5
+2026-07-23 09:23:31.323 | INFO     | services.rag_service:ask:50 - Retrieved 5 chunks workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=d34ce989-5dfb-4f96-997e-844a2300d307 vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-23 09:23:31.817 | ERROR    | services.chat_service:generate_answer:69 - generation failed
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 356
+               │     └ 3
+               └ <function _main at 0x000001DBB59668E0>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 356
+           │    └ <function BaseProcess._bootstrap at 0x000001DBB58718A0>
+           └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x000001DBB5870E00>
+    └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x000001DBB59318E0>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+    │    └ <function subprocess_started at 0x000001DBB7D905E0>
+    └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=376, family=2, type=1, proto=6, laddr=('127.0.0.1', 8000)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x000001DBB7EFF140>>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x000001DBB7D0CD60>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x000001DBB59318E0>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x000001DBB7EFF140>
+           │           │    │             └ [<socket.socket fd=376, family=2, type=1, proto=6, laddr=('127.0.0.1', 8000)>]
+           │           │    └ <function Server.serve at 0x000001DBB7D7BA60>
+           │           └ <uvicorn.server.Server object at 0x000001DBB7EFF140>
+           └ <function run at 0x000001DBB7570FE0>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x000001DBB7F02CE0>
+           │      └ <function Runner.run at 0x000001DBB75FE660>
+           └ <asyncio.runners.Runner object at 0x000001DBB5931C10>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-pa...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000001DBB75FC220>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000001DBB5931C10>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000001DBB75FC180>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000001DBB75FDF80>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1986, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000001DBB751BE20>
+    └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\anyio\_core\_tasks.py", line 275, in _run_coro
+    retval = await self._coro
+                   │    └ <member '_coro' of 'TaskHandle' objects>
+                   └ <TaskHandle pending name='starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro' coro=<corou...
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+          │    │   │      │                      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x000001DBBEC64AE0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001DBBEBF1010>
+          └ <middleware.logging_middleware.APMMiddleware object at 0x000001DBBEBF1190>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x000001DBBEC64AE0>
+          │                            │    │    │     │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x000001DBC02621B0>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001DBBEBF1010>
+          └ <function wrap_app_handling_exceptions at 0x000001DBB8E89940>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │                │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>>
+          └ <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │     │      │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │     └ <function Route.handle at 0x000001DBB8E8AE80>
+          └ APIRoute(path='/chat', name='chat', methods=['POST'])
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <function request_response.<locals>.app at 0x000001DBBE5840E0>
+          └ APIRoute(path='/chat', name='chat', methods=['POST'])
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │                            │    │        │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x000001DBC0262C00>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x000001DBC0255080>
+          └ <function wrap_app_handling_exceptions at 0x000001DBB8E89940>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC0254D60>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x000001DBC0255080>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x000001DBC0262C00>
+                     └ <function get_request_handler.<locals>.app at 0x000001DBBE5A9A80>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x000001DBB8EA8EA0>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'user': {'sub': 'admin@test.com', 'role': 'SUPER_ADMIN', 'iat': 1784778692, 'exp': 1784782292}, 'payload': ChatRequest(works...
+                 │         └ <function chat at 0x000001DBBCED3920>
+                 └ Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(Pydant...
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\api\chat.py", line 35, in chat
+    return await (
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\rag_service.py", line 60, in ask
+    answer = await ChatService.generate_answer(
+                   │           └ <staticmethod(<function ChatService.generate_answer at 0x000001DBBE072700>)>
+                   └ <class 'services.chat_service.ChatService'>
+
+> File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\chat_service.py", line 58, in generate_answer
+    answer = await ModelRouter.generate(
+                   │           └ <staticmethod(<function ModelRouter.generate at 0x000001DBBE072D40>)>
+                   └ <class 'services.model_router.ModelRouter'>
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\model_router.py", line 54, in generate
+    raise ValueError(
+
+ValueError: Unknown provider
+2026-07-23 09:23:31.835 | ERROR    | core.apm:capture_exception:29 - APM captured exception: Unknown provider
+2026-07-23 09:23:31.835 | ERROR    | services.rag_service:ask:90 - RAG pipeline failed workspace=f39246e4-e5f4-43a1-abc9-3331357420c0
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 356
+               │     └ 3
+               └ <function _main at 0x000001DBB59668E0>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 356
+           │    └ <function BaseProcess._bootstrap at 0x000001DBB58718A0>
+           └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x000001DBB5870E00>
+    └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x000001DBB59318E0>, 'target': <bound method Server.run of <uvicorn.server.Server...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+    │    └ <function subprocess_started at 0x000001DBB7D905E0>
+    └ <SpawnProcess name='SpawnProcess-1' parent=68064 started>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=376, family=2, type=1, proto=6, laddr=('127.0.0.1', 8000)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x000001DBB7EFF140>>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x000001DBB7D0CD60>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x000001DBB59318E0>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x000001DBB7EFF140>
+           │           │    │             └ [<socket.socket fd=376, family=2, type=1, proto=6, laddr=('127.0.0.1', 8000)>]
+           │           │    └ <function Server.serve at 0x000001DBB7D7BA60>
+           │           └ <uvicorn.server.Server object at 0x000001DBB7EFF140>
+           └ <function run at 0x000001DBB7570FE0>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x000001DBB7F02CE0>
+           │      └ <function Runner.run at 0x000001DBB75FE660>
+           └ <asyncio.runners.Runner object at 0x000001DBB5931C10>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-pa...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x000001DBB75FC220>
+           │    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x000001DBB5931C10>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 674, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x000001DBB75FC180>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 641, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x000001DBB75FDF80>
+    └ <_WindowsSelectorEventLoop running=True closed=False debug=False>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1986, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x000001DBB751BE20>
+    └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+  File "C:\Users\SUPRATIM\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle Task.task_wakeup(<Future finis...-flash', ...}>)>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\anyio\_core\_tasks.py", line 275, in _run_coro
+    retval = await self._coro
+                   │    └ <member '_coro' of 'TaskHandle' objects>
+                   └ <TaskHandle pending name='starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro' coro=<corou...
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+          │    │   │      │                      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x000001DBBEC64AE0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001DBBEBF1010>
+          └ <middleware.logging_middleware.APMMiddleware object at 0x000001DBBEBF1190>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x000001DBBEC64AE0>
+          │                            │    │    │     │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x000001DBC02621B0>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x000001DBBEBF1010>
+          └ <function wrap_app_handling_exceptions at 0x000001DBB8E89940>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x000001DBBEBF0560>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │                │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>>
+          └ <fastapi.routing.APIRouter object at 0x000001DBBE5D3AA0>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │     │      │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │     └ <function Route.handle at 0x000001DBB8E8AE80>
+          └ APIRoute(path='/chat', name='chat', methods=['POST'])
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │    │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │    └ <function request_response.<locals>.app at 0x000001DBBE5840E0>
+          └ APIRoute(path='/chat', name='chat', methods=['POST'])
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC02551C0>
+          │                            │    │        │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x000001DBC0262C00>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x000001DBC0255080>
+          └ <function wrap_app_handling_exceptions at 0x000001DBB8E89940>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x000001DBC0254D60>
+          │   │      └ <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x000001DBBEC640E0>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8000), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x000001DBC0255080>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x000001DBC0262C00>
+                     └ <function get_request_handler.<locals>.app at 0x000001DBBE5A9A80>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x000001DBB8EA8EA0>
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'user': {'sub': 'admin@test.com', 'role': 'SUPER_ADMIN', 'iat': 1784778692, 'exp': 1784782292}, 'payload': ChatRequest(works...
+                 │         └ <function chat at 0x000001DBBCED3920>
+                 └ Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(Pydant...
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\api\chat.py", line 35, in chat
+    return await (
+
+> File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\rag_service.py", line 60, in ask
+    answer = await ChatService.generate_answer(
+                   │           └ <staticmethod(<function ChatService.generate_answer at 0x000001DBBE072700>)>
+                   └ <class 'services.chat_service.ChatService'>
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\chat_service.py", line 58, in generate_answer
+    answer = await ModelRouter.generate(
+                   │           └ <staticmethod(<function ModelRouter.generate at 0x000001DBBE072D40>)>
+                   └ <class 'services.model_router.ModelRouter'>
+
+  File "C:\Users\SUPRATIM\Documents\GitHub\multi-vendor\services\model_router.py", line 54, in generate
+    raise ValueError(
+
+ValueError: Unknown provider
+2026-07-23 09:23:31.857 | ERROR    | core.apm:capture_exception:29 - APM captured exception: Unknown provider
+2026-07-23 09:31:44.424 | INFO     | services.rag_service:ask:36 - Question received workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=fcc0124c-6e14-4933-bf5e-834b0d8ac00b vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-23 09:31:46.646 | INFO     | services.retrieval_service:retrieve:34 - Retrieval workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 chunks=5
+2026-07-23 09:31:46.646 | INFO     | services.rag_service:ask:50 - Retrieved 5 chunks workspace=f39246e4-e5f4-43a1-abc9-3331357420c0 session=fcc0124c-6e14-4933-bf5e-834b0d8ac00b vendor=901c8e7c-b238-45d1-96bb-0d51eefe2bc6
+2026-07-23 09:31:50.451 | INFO     | middleware.logging_middleware:dispatch:24 - POST /chat status=200 time=6781ms

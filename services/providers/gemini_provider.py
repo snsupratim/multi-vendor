@@ -10,17 +10,16 @@ genai.configure(
 class GeminiProvider:
 
     @staticmethod
-    def generate(
+    async def generate(
         *,
         prompt: str,
         model_name: str
     ):
-
         model = genai.GenerativeModel(
             model_name
         )
 
-        response = model.generate_content(
+        response = await model.generate_content_async(
             prompt
         )
 

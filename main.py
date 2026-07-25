@@ -100,6 +100,9 @@ app.include_router(modules_router)
 app.include_router(module_chat_router)
 app.include_router(public_module_chat_router)
 
+from api.analytics_chat import router as analytics_chat_router
+app.include_router(analytics_chat_router)
+
 app.add_middleware(
     APMMiddleware
 )

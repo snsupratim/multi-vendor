@@ -17,9 +17,10 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str
 
     GEMINI_API_KEY: str
+    
+    SUPABASE_DB_URL: str
 
     class Config:
         env_file = ".env"
-
 
 settings = Settings()

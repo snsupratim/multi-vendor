@@ -29,7 +29,7 @@ def retrieve_schema(query: str) -> str:
         "match_documents",
         {
             "query_embedding": embedding,
-            "match_count": 3,
+            "match_count": 20,
             "p_workspace_id": AgentContext.module_id
         }
     ).execute()
@@ -59,6 +59,40 @@ def retrieve_schema(query: str) -> str:
     final_result = "\n\n".join(formatted_schemas)
     logger.info(f"retrieve_schema returned: {final_result}")
     return final_result
+
+@tool
+def retrieve_business_context(query: str) -> str:
+    """
+    Search the database for relevant business logic, definitions, and formatting rules.
+    """
+    if not AgentContext.module_id:
+        return ""
+
+    embedding = EmbeddingService.get_embedding(query)
+
+    response = supabase.rpc(
+        "match_documents",
+        {
+            "query_embedding": embedding,
+            "match_count": 20,
+            "p_workspace_id": AgentContext.module_id
+        }
+    ).execute()
+
+    if not response.data:
+        return ""
+
+    kb_docs = []
+    for doc in response.data:
+        content = doc.get("content", "")
+        # Filter OUT schemas to only get standard knowledgebase JSON documents
+        if "Schema DDL:" not in content and "CREATE TABLE" not in content:
+            kb_docs.append(content)
+            
+    if not kb_docs:
+        return ""
+
+    return "\n\n---\n\n".join(kb_docs)
 
 @tool
 async def execute_sql(sql_query: str) -> str:

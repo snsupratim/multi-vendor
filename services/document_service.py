@@ -146,7 +146,15 @@ class DocumentService:
 
         return {
             "document_id": document_id,
-            "chunks_created": len(chunks)
+            "chunks_created": len(chunks),
+            "chunks": [
+                {
+                    "id": row["id"],
+                    "chunk_id": row["chunk_id"],
+                    "vendor_id": row["vendor_id"],
+                    "workspace_id": row["workspace_id"]
+                } for row in rows
+            ]
         }
 
     @staticmethod
@@ -207,5 +215,13 @@ class DocumentService:
 
         return {
             "document_id": document_id,
-            "chunks_created": 1
+            "chunks_created": 1,
+            "chunks": [
+                {
+                    "id": row["id"],
+                    "chunk_id": row["chunk_id"],
+                    "vendor_id": row["vendor_id"],
+                    "workspace_id": row["workspace_id"]
+                }
+            ]
         }

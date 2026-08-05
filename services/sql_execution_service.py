@@ -10,13 +10,41 @@ class SQLExecutionService:
     async def get_pool(cls):
         if cls._pool is None:
             logger.info("Initializing asyncpg connection pool...")
+            
+            async def init_connection(conn):
+                # Ensure the connection searches these schemas by default
+                await conn.execute("SET search_path TO payroll;")
+                
             cls._pool = await asyncpg.create_pool(
-                settings.SUPABASE_DB_URL,
+                settings.PAYROLL_DB_URL,
                 min_size=1,
                 max_size=10,
-                command_timeout=30.0 # 30 second strict timeout for AI queries
+                command_timeout=30.0, # 30 second strict timeout for AI queries
+                setup=init_connection
             )
         return cls._pool
+
+    @classmethod
+    def validate_sql_safety(cls, query: str):
+        import re
+        # Remove single-quoted strings and double-quoted identifiers to prevent false positives
+        q1 = re.sub(r"'.*?'", "''", query.upper())
+        q2 = re.sub(r'".*?"', '""', q1)
+        
+        q_stripped = q2.strip()
+        if not q_stripped.startswith("SELECT") and not q_stripped.startswith("WITH"):
+            raise ValueError("SECURITY ALERT: Only SELECT queries are allowed. Your query must start with SELECT or WITH.")
+            
+        dangerous_keywords = [
+            r'\bINSERT\b', r'\bUPDATE\b', r'\bDELETE\b', r'\bDROP\b', 
+            r'\bALTER\b', r'\bCREATE\b', r'\bTRUNCATE\b', r'\bGRANT\b', 
+            r'\bREVOKE\b', r'\bEXEC\b', r'\bEXECUTE\b', r'\bMERGE\b',
+            r'\bCOMMIT\b', r'\bROLLBACK\b'
+        ]
+        
+        for keyword in dangerous_keywords:
+            if re.search(keyword, q2):
+                raise ValueError("SECURITY ALERT: Prohibited SQL operation detected. Data modification, DDL, and transactional commands are strictly blocked by the system guardrails.")
 
     @classmethod
     async def execute_query(cls, query: str, vendor_id: str):
@@ -25,6 +53,7 @@ class SQLExecutionService:
         Includes safeguards to prevent massive result sets.
         """
         try:
+            cls.validate_sql_safety(query)
             pool = await cls.get_pool()
             
             async with pool.acquire() as conn:

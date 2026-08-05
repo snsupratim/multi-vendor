@@ -45,6 +45,16 @@ app = FastAPI(
     title="Multi Tenant RAG Platform"
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins including local HTML files
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # print(
 #     ModelRouter.generate(
@@ -102,6 +112,9 @@ app.include_router(public_module_chat_router)
 
 from api.analytics_chat import router as analytics_chat_router
 app.include_router(analytics_chat_router)
+
+from api.billing import router as billing_router
+app.include_router(billing_router)
 
 app.add_middleware(
     APMMiddleware

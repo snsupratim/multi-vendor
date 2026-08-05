@@ -48,7 +48,11 @@ async def upload_module_json(module_id: str, payload: dict, user=Depends(get_cur
             payload=doc_request,
             uploaded_by=user["sub"]
         )
-        return {"message": "JSON processed for module successfully", "chunks_created": result["chunks_created"]}
+        return {
+            "message": "JSON processed for module successfully", 
+            "chunks_created": result["chunks_created"],
+            "chunks": result.get("chunks", [])
+        }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -78,7 +82,11 @@ async def upload_module_schema(module_id: str, payload: dict, user=Depends(get_c
             payload=schema_request,
             uploaded_by=user["sub"]
         )
-        return {"message": "SQL Schema processed for module successfully", "chunks_created": result["chunks_created"]}
+        return {
+            "message": "SQL Schema processed for module successfully", 
+            "chunks_created": result["chunks_created"],
+            "chunks": result.get("chunks", [])
+        }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

@@ -13,14 +13,14 @@ async def test_db_connection():
     try:
         from core.config import settings
         import asyncpg
-        conn = await asyncpg.connect(settings.SUPABASE_DB_URL, timeout=10)
+        conn = await asyncpg.connect(settings.PAYROLL_DB_URL, timeout=10)
         version = await conn.fetchval('SELECT version()')
         await conn.close()
         # Do not log the password
-        safe_url = settings.SUPABASE_DB_URL.replace(settings.SUPABASE_DB_URL.split(":")[2].split("@")[0], "HIDDEN_PASSWORD")
+        safe_url = settings.PAYROLL_DB_URL.replace(settings.PAYROLL_DB_URL.split(":")[2].split("@")[0], "HIDDEN_PASSWORD")
         return {"status": "success", "version": version, "url_used": safe_url}
     except Exception as e:
-        safe_url = settings.SUPABASE_DB_URL.replace(settings.SUPABASE_DB_URL.split(":")[2].split("@")[0], "HIDDEN_PASSWORD")
+        safe_url = settings.PAYROLL_DB_URL.replace(settings.PAYROLL_DB_URL.split(":")[2].split("@")[0], "HIDDEN_PASSWORD")
         return {"status": "error", "type": type(e).__name__, "message": str(e), "url_used": safe_url}
 
 @router.post("")
@@ -45,11 +45,29 @@ async def analytics_module_chat(payload: ModuleChatRequest):
         
     try:
         from services.memory_service import MemoryService
+        from repositories.module_repository import ModuleRepository
+        from services.sql_agent.agent_tools import retrieve_business_context
+        from services.billing_service import BillingService
+        
+        # 1.5 Verify Billing/Token Quota Access
+        is_active = await BillingService.check_access(vendor_id)
+        if not is_active:
+            raise HTTPException(
+                status_code=402, 
+                detail="Payment Required: Vendor account is inactive or token quota exceeded."
+            )
         
         # 2. Fetch Conversation History
         history_text = await MemoryService.get_history(session_id)
         
-        # 3. Trigger the LangGraph Agent
+        # 3. Fetch Module Data (for dynamic system prompt)
+        module_doc = await ModuleRepository.get_by_module_id(module_id)
+        module_system_prompt = module_doc.get("system_prompt", "") if module_doc else ""
+        
+        # 4. Fetch Business Context (RAG for business logic)
+        business_context = retrieve_business_context.invoke({"query": payload.question})
+        
+        # 5. Trigger the LangGraph Agent
         logger.info(f"Triggering Analytics Agent for Vendor: {vendor_id} | Module: {module_id}")
         
         agent_workflow = SQLAgentWorkflow(
@@ -60,8 +78,21 @@ async def analytics_module_chat(payload: ModuleChatRequest):
             question=payload.question,
             vendor_id=vendor_id,
             module_id=module_id,
-            history=history_text
+            history=history_text,
+            module_system_prompt=module_system_prompt,
+            business_context=business_context
         )
+        
+        # 6. Log Token Usage
+        usage = result.get("usage", {})
+        if usage:
+            await BillingService.log_usage(
+                vendor_id=vendor_id,
+                session_id=session_id,
+                model_name=payload.model_name or "default",
+                prompt_tokens=usage.get("prompt_tokens", 0),
+                completion_tokens=usage.get("completion_tokens", 0)
+            )
         
         # We attempt to parse the raw markdown output into a clean JSON dict 
         # so the frontend can immediately consume it for charting.
@@ -92,14 +123,21 @@ async def analytics_module_chat(payload: ModuleChatRequest):
             
         try:
             structured_data = json.loads(raw_response)
+            if "components" not in structured_data:
+                # If LLM still returned old format, wrap it
+                structured_data = {"components": [structured_data]}
         except json.JSONDecodeError:
             # Fallback if the LLM outputted conversational text instead of raw JSON
             structured_data = {
-                "componentType": "TEXT",
-                "title": "Analytics Response",
-                "description": raw_response,
-                "config": {},
-                "data": []
+                "components": [
+                    {
+                        "componentType": "TEXT",
+                        "title": "Analytics Response",
+                        "description": raw_response,
+                        "config": {},
+                        "data": []
+                    }
+                ]
             }
             
         # Attach the session_id so the frontend can send it back for conversational memory
@@ -114,9 +152,14 @@ async def analytics_module_chat(payload: ModuleChatRequest):
             context={"module_id": module_id, "vendor_id": vendor_id, "type": "analytics_chat"}
         )
         return {
-            "componentType": "TEXT",
-            "title": "Analytics Error",
-            "description": f"The analytics engine encountered an unexpected error: {str(e)}",
-            "config": {},
-            "data": []
+            "components": [
+                {
+                    "componentType": "TEXT",
+                    "title": "Analytics Error",
+                    "description": f"The analytics engine encountered an unexpected error: {str(e)}",
+                    "config": {},
+                    "data": []
+                }
+            ],
+            "session_id": session_id if 'session_id' in locals() else ""
         }

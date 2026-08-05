@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tek Anthem - Analytics Demo</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chat-bubble { max-width: 80%; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Hide scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Header & Tabs -->
+    <div class="bg-blue-600 text-white shadow-md flex flex-col pt-4">
+        <h1 class="text-xl font-bold px-6">Tek Anthem - AI Chat Interface</h1>
+        <div class="flex gap-1 mt-4 px-6">
+            <button onclick="switchTab('analytics')" id="tab-analytics" class="px-6 py-2 bg-white text-blue-600 font-bold rounded-t-lg transition">
+                📊 Analytics (Text-to-SQL)
+            </button>
+            <button onclick="switchTab('standard')" id="tab-standard" class="px-6 py-2 bg-blue-700 text-blue-100 font-bold rounded-t-lg hover:bg-blue-500 transition">
+                📚 Standard RAG Chat
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CHAT CONTAINER -->
+    <div id="chat-container" class="flex-1 p-6 overflow-y-auto flex flex-col gap-6 bg-slate-50">
+        <!-- Messages inject here -->
+        <div class="self-center bg-gray-200 text-gray-500 px-4 py-1 rounded-full text-sm">
+            Switched to Analytics Mode
+        </div>
+    </div>
+
+    <!-- INPUT AREA -->
+    <div class="p-4 bg-white border-t border-gray-200 shadow-xl">
+        <div class="max-w-4xl mx-auto mb-2 flex items-center justify-end">
+            <select id="model-select" class="text-sm border border-gray-300 rounded px-2 py-1 bg-gray-50 text-gray-700 focus:outline-none focus:border-blue-500">
+                <option value="GEMINI|gemini-2.5-flash">Google: Gemini 2.5 Flash</option>
+                <option value="LLAMA|llama-3.3-70b-versatile">Groq: Llama 3.3 70B</option>
+            </select>
+        </div>
+        <div class="flex gap-4 max-w-4xl mx-auto">
+            <textarea id="prompt-input" rows="3" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y" placeholder="Ask a question..."></textarea>
+            <button onclick="sendMessage()" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition h-fit self-end">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const VENDOR_ID = "6054690d-f545-43a9-83ab-d2435abfdeaf";
+        const MODULE_ID = "6361cf82-2b1a-4570-b8fc-dfa2d456ca02";
+        
+        let currentMode = 'analytics';
+        
+        // Keep separate session histories so switching tabs doesn't mix context
+        const state = {
+            analytics: { session_id: null, history: [] },
+            standard: { session_id: null, history: [] }
+        };
+
+        let chartCounter = 0;
+
+        function switchTab(mode) {
+            currentMode = mode;
+            
+            // Update Tab UI
+            if (mode === 'analytics') {
+                document.getElementById('tab-analytics').className = "px-6 py-2 bg-white text-blue-600 font-bold rounded-t-lg transition";
+                document.getElementById('tab-standard').className = "px-6 py-2 bg-blue-700 text-blue-100 font-bold rounded-t-lg hover:bg-blue-500 transition";
+                document.getElementById('prompt-input').placeholder = "Ask about your leaves, e.g. 'Show me a pie chart of leaves by type...'";
+            } else {
+                document.getElementById('tab-standard').className = "px-6 py-2 bg-white text-blue-600 font-bold rounded-t-lg transition";
+                document.getElementById('tab-analytics').className = "px-6 py-2 bg-blue-700 text-blue-100 font-bold rounded-t-lg hover:bg-blue-500 transition";
+                document.getElementById('prompt-input').placeholder = "Ask about HR policies, e.g. 'What is the maternity leave policy?'";
+            }
+
+            // Clear UI and Re-render history
+            const container = document.getElementById('chat-container');
+            container.innerHTML = `<div class="self-center bg-gray-200 text-gray-500 px-4 py-1 rounded-full text-sm">Switched to ${mode === 'analytics' ? 'Analytics' : 'Standard RAG'} Mode</div>`;
+            
+            state[mode].history.forEach(msg => {
+                if(msg.type === 'user') addMessageHTML(msg.text, 'user');
+                else if(mode === 'analytics') renderAIResponseHTML(msg.components);
+                else addMessageHTML(msg.text, 'ai');
+            });
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('prompt-input');
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            input.value = '';
+            
+            // Add user message to UI and State
+            addMessageHTML(prompt, 'user');
+            state[currentMode].history.push({ type: 'user', text: prompt });
+            
+            const loadingId = addLoadingMessage();
+
+            // Get selected model
+            const modelSelect = document.getElementById('model-select').value;
+            const [selectedFamily, selectedName] = modelSelect.split('|');
+
+            const API_URL = currentMode === 'analytics' 
+                ? "http://localhost:8000/analytics-chat" 
+                : "http://localhost:8000/module-chat";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        vendor_id: VENDOR_ID,
+                        module_id: MODULE_ID,
+                        question: prompt,
+                        model_family: selectedFamily,
+                        model_name: selectedName,
+                        session_id: state[currentMode].session_id
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                
+                // Save session ID
+                state[currentMode].session_id = data.session_id;
+
+                if (currentMode === 'analytics') {
+                    if (data.components) {
+                        renderAIResponseHTML(data.components);
+                        state[currentMode].history.push({ type: 'ai', components: data.components });
+                    } else {
+                        addMessageHTML("Failed to parse Analytics response.", 'ai');
+                    }
+                } else {
+                    // Standard RAG response format handling
+                    let textResponse = "";
+                    if (data.components && data.components[0] && data.components[0].description) {
+                        textResponse = data.components[0].description;
+                    } else if (data.answer) {
+                        textResponse = data.answer;
+                    } else if (typeof data === 'string') {
+                        textResponse = data;
+                    } else {
+                        textResponse = JSON.stringify(data, null, 2);
+                    }
+                    
+                    addMessageHTML(textResponse, 'ai');
+                    state[currentMode].history.push({ type: 'ai', text: textResponse });
+                }
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                addMessageHTML(`Error: Could not connect to API. Is FastAPI running?`, 'ai');
+            }
+        }
+
+        function addMessageHTML(text, sender) {
+            const container = document.getElementById('chat-container');
+            const div = document.createElement('div');
+            
+            if (sender === 'user') {
+                div.className = "self-end bg-blue-100 text-blue-900 px-6 py-3 rounded-2xl rounded-tr-none shadow-sm chat-bubble";
+                div.innerHTML = `<p class="whitespace-pre-wrap font-medium">${text}</p>`;
+            } else {
+                div.className = "self-start bg-white border border-gray-200 px-6 py-4 rounded-2xl rounded-tl-none shadow-sm chat-bubble w-full max-w-[90%]";
+                div.innerHTML = `<p class="whitespace-pre-wrap">${text}</p>`;
+            }
+            
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addLoadingMessage() {
+            const id = 'loading-' + Date.now();
+            const container = document.getElementById('chat-container');
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = "self-start bg-white border border-gray-200 px-6 py-4 rounded-2xl rounded-tl-none shadow-sm chat-bubble";
+            div.innerHTML = `<div class="flex items-center gap-3"><div class="spinner"></div><span class="text-gray-500 font-medium">Processing request...</span></div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function renderAIResponseHTML(components) {
+            const container = document.getElementById('chat-container');
+            const wrapper = document.createElement('div');
+            wrapper.className = "self-start w-full max-w-[90%] bg-white border border-gray-200 rounded-2xl rounded-tl-none shadow-sm flex flex-col gap-6 p-6";
+
+            components.forEach(comp => {
+                const section = document.createElement('div');
+                
+                if (comp.componentType === "TEXT") {
+                    section.innerHTML = `
+                        <h3 class="text-lg font-bold text-gray-800">${comp.title}</h3>
+                        <p class="text-gray-700 mt-2 whitespace-pre-wrap leading-relaxed">${comp.description}</p>
+                    `;
+                } 
+                else if (comp.componentType === "TABLE") {
+                    let tableHTML = `
+                        <h3 class="text-lg font-bold text-gray-800">${comp.title}</h3>
+                        ${comp.description ? `<p class="text-sm text-gray-500 mb-3">${comp.description}</p>` : ''}
+                        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-inner">
+                            <table class="w-full text-left text-sm text-gray-600">
+                                <thead class="bg-gray-100 text-gray-700"><tr>
+                    `;
+                    
+                    if (comp.data.length > 0) {
+                        const headers = Object.keys(comp.data[0]);
+                        headers.forEach(h => tableHTML += `<th class="px-4 py-3 font-semibold border-b whitespace-nowrap">${h}</th>`);
+                        tableHTML += `</tr></thead><tbody class="divide-y divide-gray-100">`;
+                        
+                        comp.data.forEach(row => {
+                            tableHTML += `<tr class="hover:bg-blue-50 transition">`;
+                            headers.forEach(h => tableHTML += `<td class="px-4 py-3 whitespace-nowrap">${row[h] !== null ? row[h] : '-'}</td>`);
+                            tableHTML += `</tr>`;
+                        });
+                    }
+                    tableHTML += `</tbody></table></div>`;
+                    section.innerHTML = tableHTML;
+                }
+                else if (comp.componentType === "GRAPH") {
+                    chartCounter++;
+                    const canvasId = 'chart-' + chartCounter;
+                    section.innerHTML = `
+                        <h3 class="text-lg font-bold text-gray-800">${comp.title}</h3>
+                        ${comp.description ? `<p class="text-sm text-gray-500 mb-4">${comp.description}</p>` : ''}
+                        <div class="relative h-96 w-full p-4 border border-gray-100 rounded-lg bg-gray-50"><canvas id="${canvasId}"></canvas></div>
+                    `;
+                    
+                    setTimeout(() => {
+                        renderChartJS(canvasId, comp.config, comp.data);
+                    }, 100);
+                }
+                
+                wrapper.appendChild(section);
+            });
+
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function renderChartJS(canvasId, config, data) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+            
+            let chartType = config.type || 'bar';
+            const xAxis = config.xAxis;
+            const yAxis = config.yAxis;
+
+            const labels = data.map(row => row[xAxis]);
+            const values = data.map(row => row[yAxis]);
+
+            if (chartType === 'area') chartType = 'line';
+
+            new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: yAxis,
+                        data: values,
+                        backgroundColor: chartType === 'pie' ? [
+                            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'
+                        ] : '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1,
+                        fill: config.type === 'area'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: chartType === 'pie' } }
+                }
+            });
+        }
+        
+        document.getElementById('prompt-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

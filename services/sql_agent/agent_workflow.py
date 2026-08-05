@@ -39,7 +39,15 @@ class SQLAgentWorkflow:
         # We bind the tools to the LLM
         self.tools = [execute_sql]
 
-    async def run(self, question: str, vendor_id: str, module_id: str, history: str = "") -> dict:
+    async def run(
+        self, 
+        question: str, 
+        vendor_id: str, 
+        module_id: str, 
+        history: str = "",
+        module_system_prompt: str = "",
+        business_context: str = ""
+    ) -> dict:
         """
         Executes the LangGraph ReAct agent loop.
         """
@@ -52,13 +60,17 @@ class SQLAgentWorkflow:
         from services.sql_agent.agent_tools import retrieve_schema
         schemas_text = retrieve_schema.invoke({"query": question})
         
-        # 2. Inject the vendor_id, history, and schemas into the prompt
+        # 2. Inject the vendor_id, history, schemas, and dynamic prompts
         dynamic_prompt = SQL_GENERATOR_PROMPT.replace(
             "{vendor_id}", vendor_id
         ).replace(
             "{schemas}", schemas_text
         ).replace(
             "{history}", history
+        ).replace(
+            "{module_system_prompt}", module_system_prompt or "No specific module instructions provided."
+        ).replace(
+            "{business_context}", business_context or "No specific business context found for this query."
         )
         
         # 3. We create the ReAct agent graph here so we can use the dynamic prompt
@@ -87,6 +99,27 @@ class SQLAgentWorkflow:
         # The final message from the LLM should be the raw response
         final_message = final_state["messages"][-1].content
         
+        # Extract and aggregate token usage across all steps in the ReAct loop
+        total_prompt_tokens = 0
+        total_completion_tokens = 0
+        
+        for msg in final_state["messages"]:
+            # Newer LangChain versions use usage_metadata
+            if hasattr(msg, "usage_metadata") and msg.usage_metadata:
+                usage = msg.usage_metadata
+                total_prompt_tokens += usage.get("input_tokens", 0)
+                total_completion_tokens += usage.get("output_tokens", 0)
+            # Fallback for older integrations
+            elif hasattr(msg, "response_metadata") and "token_usage" in msg.response_metadata:
+                usage = msg.response_metadata["token_usage"]
+                total_prompt_tokens += usage.get("prompt_tokens", 0)
+                total_completion_tokens += usage.get("completion_tokens", 0)
+        
         return {
-            "raw_response": final_message
+            "raw_response": final_message,
+            "usage": {
+                "prompt_tokens": total_prompt_tokens,
+                "completion_tokens": total_completion_tokens,
+                "total_tokens": total_prompt_tokens + total_completion_tokens
+            }
         }

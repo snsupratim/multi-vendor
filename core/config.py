@@ -18,9 +18,11 @@ class Settings(BaseSettings):
 
     GEMINI_API_KEY: str
     
-    SUPABASE_DB_URL: str
+    # PostgreSQL Connection String for actual Payroll Tables
+    PAYROLL_DB_URL: str
 
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 settings = Settings()

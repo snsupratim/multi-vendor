@@ -125,7 +125,9 @@ async def analytics_module_chat(payload: ModuleChatRequest):
             structured_data = json.loads(raw_response)
             if "components" not in structured_data:
                 # If LLM still returned old format, wrap it
-                structured_data = {"components": [structured_data]}
+                structured_data = {"components": [structured_data], "suggestions": []}
+            if "suggestions" not in structured_data:
+                structured_data["suggestions"] = []
         except json.JSONDecodeError:
             # Fallback if the LLM outputted conversational text instead of raw JSON
             structured_data = {
@@ -137,7 +139,8 @@ async def analytics_module_chat(payload: ModuleChatRequest):
                         "config": {},
                         "data": []
                     }
-                ]
+                ],
+                "suggestions": []
             }
             
         # Attach the session_id so the frontend can send it back for conversational memory

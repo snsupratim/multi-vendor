@@ -29,9 +29,15 @@ MODULE SPECIFIC INSTRUCTIONS:
 {module_system_prompt}
 
 OUTPUT FORMAT:
-Once you have successfully executed the SQL and retrieved the data, you must format your final response as a JSON object containing a `components` array.
+Once you have successfully executed the SQL and retrieved the data, you must format your final response as a JSON object containing a `components` array and a `suggestions` array.
 If the user asks for a chart, graph, or visualization, output a GRAPH component. If they ask for a list or table, output a TABLE component. Otherwise, output a TEXT component. 
 If the user asks for multiple visualizations (e.g., "a table and a pie chart"), you MUST generate multiple components in the array!
+
+SUGGESTIONS:
+You MUST provide exactly 3 follow-up question suggestions in the `suggestions` array to guide the user on what to ask next:
+1. Extra details: Suggest asking for more specific details in a similar format (e.g. "Do you want to see the specific dates for these leaves?").
+2. Visualization: Suggest a specific graphical chart based on the data (e.g. "Would you like to see this as a pie chart?").
+3. Knowledge/Policy: Suggest a business logic or policy question based on the Knowledge Base (e.g. "What is the policy for sick leave?").
 
 JSON FORMAT:
 {{
@@ -57,6 +63,11 @@ JSON FORMAT:
       "config": {{"type": "bar", "xAxis": "date_column", "yAxis": "value_column"}},
       "data": [{{"date_column": "2024-01-01", "value_column": 100}}]
     }}
+  ],
+  "suggestions": [
+    "Do you want to see the specific dates for these leaves?",
+    "Would you like to see this as a pie chart?",
+    "What is the policy for sick leave?"
   ]
 }}
 

@@ -89,9 +89,14 @@
             
             state[mode].history.forEach(msg => {
                 if(msg.type === 'user') addMessageHTML(msg.text, 'user');
-                else if(mode === 'analytics') renderAIResponseHTML(msg.components);
+                else if(mode === 'analytics') renderAIResponseHTML(msg.components, msg.suggestions);
                 else addMessageHTML(msg.text, 'ai');
             });
+        }
+
+        function clickSuggestion(text) {
+            document.getElementById('prompt-input').value = text;
+            sendMessage();
         }
 
         async function sendMessage() {
@@ -137,8 +142,8 @@
 
                 if (currentMode === 'analytics') {
                     if (data.components) {
-                        renderAIResponseHTML(data.components);
-                        state[currentMode].history.push({ type: 'ai', components: data.components });
+                        renderAIResponseHTML(data.components, data.suggestions);
+                        state[currentMode].history.push({ type: 'ai', components: data.components, suggestions: data.suggestions });
                     } else {
                         addMessageHTML("Failed to parse Analytics response.", 'ai');
                     }
@@ -193,7 +198,7 @@
             return id;
         }
 
-        function renderAIResponseHTML(components) {
+        function renderAIResponseHTML(components, suggestions = []) {
             const container = document.getElementById('chat-container');
             const wrapper = document.createElement('div');
             wrapper.className = "self-start w-full max-w-[90%] bg-white border border-gray-200 rounded-2xl rounded-tl-none shadow-sm flex flex-col gap-6 p-6";
@@ -246,6 +251,21 @@
                 
                 wrapper.appendChild(section);
             });
+
+            // Add suggestions if available
+            if (suggestions && suggestions.length > 0) {
+                const sugContainer = document.createElement('div');
+                sugContainer.className = "flex flex-wrap gap-2 mt-2 pt-4 border-t border-gray-100";
+                
+                suggestions.forEach(sug => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-blue-50 text-blue-700 text-sm px-4 py-2 rounded-full border border-blue-200 hover:bg-blue-100 hover:text-blue-800 transition shadow-sm";
+                    btn.innerText = sug;
+                    btn.onclick = () => clickSuggestion(sug);
+                    sugContainer.appendChild(btn);
+                });
+                wrapper.appendChild(sugContainer);
+            }
 
             container.appendChild(wrapper);
             container.scrollTop = container.scrollHeight;

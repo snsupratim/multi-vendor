@@ -43,7 +43,17 @@
 
     <!-- INPUT AREA -->
     <div class="p-4 bg-white border-t border-gray-200 shadow-xl">
-        <div class="max-w-4xl mx-auto mb-2 flex items-center justify-end">
+        <div class="max-w-4xl mx-auto mb-2 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <label for="format-select" class="text-sm font-semibold text-gray-600">Format:</label>
+                <select id="format-select" class="text-sm border border-gray-300 rounded px-2 py-1 bg-gray-50 text-gray-700 focus:outline-none focus:border-blue-500">
+                    <option value="auto">Auto (Let AI Decide)</option>
+                    <option value="table">Table</option>
+                    <option value="pie chart">Pie Chart</option>
+                    <option value="bar chart">Bar Chart</option>
+                    <option value="line chart">Line Chart</option>
+                </select>
+            </div>
             <select id="model-select" class="text-sm border border-gray-300 rounded px-2 py-1 bg-gray-50 text-gray-700 focus:outline-none focus:border-blue-500">
                 <option value="GEMINI|gemini-2.5-flash">Google: Gemini 2.5 Flash</option>
                 <option value="LLAMA|llama-3.3-70b-versatile">Groq: Llama 3.3 70B</option>
@@ -101,15 +111,22 @@
 
         async function sendMessage() {
             const input = document.getElementById('prompt-input');
-            const prompt = input.value.trim();
+            let prompt = input.value.trim();
             if (!prompt) return;
 
             input.value = '';
             
-            // Add user message to UI and State
+            // Add user message to UI and State (raw prompt)
             addMessageHTML(prompt, 'user');
             state[currentMode].history.push({ type: 'user', text: prompt });
             
+            // If in Analytics mode and a specific format is requested, append it to the API payload quietly
+            const formatSelect = document.getElementById('format-select').value;
+            let apiPrompt = prompt;
+            if (currentMode === 'analytics' && formatSelect !== 'auto') {
+                apiPrompt += `\n\n(Please strictly format the final response as a ${formatSelect})`;
+            }
+
             const loadingId = addLoadingMessage();
 
             // Get selected model
@@ -127,7 +144,7 @@
                     body: JSON.stringify({
                         vendor_id: VENDOR_ID,
                         module_id: MODULE_ID,
-                        question: prompt,
+                        question: apiPrompt,
                         model_family: selectedFamily,
                         model_name: selectedName,
                         session_id: state[currentMode].session_id

@@ -99,7 +99,7 @@ async def analytics_module_chat(payload: ModuleChatRequest):
         raw_response = result.get("raw_response", "")
         
         # Save to Hot/Cold Memory
-        await MemoryService.save_turn(session_id, payload.question, raw_response)
+        await MemoryService.save_turn(session_id, vendor_id, payload.question, raw_response)
         
         # If the LLM returns a list (e.g. [{"text": "..."}]), extract the text
         if isinstance(raw_response, list):

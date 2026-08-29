@@ -42,7 +42,7 @@ class MemoryService:
         return "\n".join(formatted)
 
     @classmethod
-    async def save_turn(cls, session_id: str, question: str, answer: str):
+    async def save_turn(cls, session_id: str, vendor_id: str, question: str, answer: str):
         key = cls._get_key(session_id)
         now = datetime.now(timezone.utc).isoformat()
         
@@ -56,5 +56,5 @@ class MemoryService:
         await redis_client.expire(key, cls.TTL_SECONDS)
         
         # 2. Save to MongoDB
-        await ChatHistoryRepository.append_message(session_id, "user", question, now)
-        await ChatHistoryRepository.append_message(session_id, "assistant", answer, now)
+        await ChatHistoryRepository.append_message(session_id, vendor_id, "user", question, now)
+        await ChatHistoryRepository.append_message(session_id, vendor_id, "assistant", answer, now)

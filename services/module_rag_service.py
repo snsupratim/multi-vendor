@@ -38,7 +38,8 @@ class ModuleRAGService:
                 question, chunks, model_family=model_family, model_name=model_name, system_prompt=system_prompt, history=history
             )
             
-            await MemoryService.save_turn(session_id, question, answer)
+            # Save to Hot/Cold Memory
+            await MemoryService.save_turn(session_id, vendor_id, question, answer)
             
             return {
                 "answer": answer,

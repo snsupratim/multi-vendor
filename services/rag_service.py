@@ -66,7 +66,7 @@ class RAGService:
                     history=history
                 )
         
-            await MemoryService.save_turn(session_id, question, answer)
+            await MemoryService.save_turn(session_id, vendor_id, question, answer)
 
             return {
                 "answer": answer,

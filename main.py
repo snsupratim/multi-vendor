@@ -116,6 +116,9 @@ app.include_router(analytics_chat_router)
 from api.billing import router as billing_router
 app.include_router(billing_router)
 
+from api.history import router as history_router
+app.include_router(history_router)
+
 app.add_middleware(
     APMMiddleware
 )

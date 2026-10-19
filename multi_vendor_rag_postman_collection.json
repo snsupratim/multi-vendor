@@ -1,0 +1,1180 @@
+{
+	"info": {
+		"_postman_id": "8f3b4c12-984b-4a57-b12e-1e9b25f492a1",
+		"name": "Multi-Tenant RAG & Analytics Platform API",
+		"description": "Complete Postman collection for the Multi-Tenant RAG Platform including Vendor Onboarding, Workspace Management, Document Ingestion, Model Registry, Global Modules, Public Chat, Text-to-SQL Analytics, APM Logs, and Billing.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "api_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "vendor_id",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"type": "string"
+		},
+		{
+			"key": "workspace_id",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"type": "string"
+		},
+		{
+			"key": "module_id",
+			"value": "00000000-0000-0000-0000-000000000000",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "sess_analytics_demo_01",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register Super Admin / User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('user_id', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Supratim Admin\",\n  \"email\": \"admin@platform.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new super admin or user"
+					}
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.access_token) {",
+									"    pm.collectionVariables.set('jwt_token', jsonData.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@platform.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate user and automatically save the access token to the collection variable `jwt_token`."
+					}
+				},
+				{
+					"name": "Get Current User Profile (/me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Vendors Management",
+			"item": [
+				{
+					"name": "Create Vendor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('vendor_id', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Acme Payroll Corp\",\n  \"description\": \"Enterprise Payroll & HR Client\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vendors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vendors"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Vendors",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vendors",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vendors"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Vendor By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vendors/{{vendor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vendors",
+								"{{vendor_id}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Workspaces Management",
+			"item": [
+				{
+					"name": "Create Workspace",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.workspace_id) {",
+									"    pm.collectionVariables.set('workspace_id', jsonData.workspace_id);",
+									"} else if (jsonData.id) {",
+									"    pm.collectionVariables.set('workspace_id', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendor_id\": \"{{vendor_id}}\",\n  \"name\": \"HR Knowledgebase\",\n  \"description\": \"Internal HR Policies and Handbook\",\n  \"system_prompt\": \"You are a helpful HR Assistant. Answer questions based on uploaded documents.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/workspaces",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"workspaces"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Vendor Workspaces",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/workspaces/vendor/{{vendor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"workspaces",
+								"vendor",
+								"{{vendor_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Workspace System Prompt",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"system_prompt\": \"You are an updated HR Expert AI assistant with strict confidential compliance.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/workspaces/{{workspace_id}}/prompt",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"workspaces",
+								"{{workspace_id}}",
+								"prompt"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Document Ingestion",
+			"item": [
+				{
+					"name": "Upload Document File (PDF/DOCX/TXT)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "workspace_id",
+									"value": "{{workspace_id}}",
+									"type": "text"
+								},
+								{
+									"key": "vendor_id",
+									"value": "{{vendor_id}}",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"upload"
+							]
+						}
+					}
+				},
+				{
+					"name": "Upload JSON Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"vendor_id\": \"{{vendor_id}}\",\n  \"pageContent\": \"Employees receive 18 days of paid annual leave, 12 sick leaves, and 10 public holidays per calendar year.\",\n  \"metadata\": {\n    \"category\": \"LEAVE_POLICY\",\n    \"year\": 2026\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/upload/json",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"upload",
+								"json"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. API Keys Provisioning",
+			"item": [
+				{
+					"name": "Create API Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.api_key) {",
+									"    pm.collectionVariables.set('api_key', jsonData.api_key);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"name\": \"Frontend Widget Production Key\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api-keys",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api-keys"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Authenticated Workspace Chat",
+			"item": [
+				{
+					"name": "Chat with Workspace RAG",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"question\": \"How many sick leaves do employees get each year?\",\n  \"model_family\": \"gemini\",\n  \"model_name\": \"gemini-2.5-flash\",\n  \"session_id\": \"{{session_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Public Chat API (X-API-Key)",
+			"item": [
+				{
+					"name": "Public RAG Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Key",
+								"value": "{{api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What is the annual leave quota?\",\n  \"model_family\": \"gemini\",\n  \"model_name\": \"gemini-2.5-flash\",\n  \"session_id\": \"{{session_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/v1/public/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"public",
+								"chat"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Global Modules & Access Control",
+			"item": [
+				{
+					"name": "Get All Global Modules",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/modules",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"modules"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Global Module",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.module_id) {",
+									"    pm.collectionVariables.set('module_id', jsonData.module_id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"PAYROLL\",\n  \"description\": \"Global Payroll & Employee Text-to-SQL Analytics Engine\",\n  \"system_prompt\": \"You are an enterprise Payroll Analytics Agent. Generate PostgreSQL queries and analytics components strictly adhering to tenant vendor_id.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/modules",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"modules"
+							]
+						}
+					}
+				},
+				{
+					"name": "Grant Vendor Access to Module",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendor_id\": \"{{vendor_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/modules/{{module_id}}/grant",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"modules",
+								"{{module_id}}",
+								"grant"
+							]
+						}
+					}
+				},
+				{
+					"name": "Upload Module Business Logic JSON",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageContent\": \"Overtime calculation logic: Standard hourly pay * 1.5 for extra hours recorded beyond 40 hours/week.\",\n  \"metadata\": {\n    \"rule\": \"overtime_rate\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/modules/{{module_id}}/documents/json",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"modules",
+								"{{module_id}}",
+								"documents",
+								"json"
+							]
+						}
+					}
+				},
+				{
+					"name": "Upload Module SQL Schema DDL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"table_name\": \"employees\",\n  \"schema_ddl\": \"CREATE TABLE employees (id UUID PRIMARY KEY, vendor_id VARCHAR, name VARCHAR, department VARCHAR, salary NUMERIC, joined_at TIMESTAMP);\",\n  \"description\": \"Employee records table partitioned logically by vendor_id\",\n  \"relationships\": \"Linked to department and payroll tables\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/modules/{{module_id}}/documents/schema",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"modules",
+								"{{module_id}}",
+								"documents",
+								"schema"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Analytics & Text-to-SQL Chat",
+			"item": [
+				{
+					"name": "Analytics Chat (LangGraph SQL Agent)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendor_id\": \"{{vendor_id}}\",\n  \"module_id\": \"{{module_id}}\",\n  \"question\": \"Show me total salary expenditure by department in a bar chart\",\n  \"model_family\": \"gemini\",\n  \"model_name\": \"gemini-2.5-flash\",\n  \"session_id\": \"{{session_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analytics-chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"analytics-chat"
+							]
+						}
+					}
+				},
+				{
+					"name": "Analytics DB Test Connection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/analytics-chat/db-test",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"analytics-chat",
+								"db-test"
+							]
+						}
+					}
+				},
+				{
+					"name": "Internal Module RAG Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendor_id\": \"{{vendor_id}}\",\n  \"module_id\": \"{{module_id}}\",\n  \"question\": \"What is the overtime rate policy?\",\n  \"model_family\": \"gemini\",\n  \"model_name\": \"gemini-2.5-flash\",\n  \"session_id\": \"{{session_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/module-chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"module-chat"
+							]
+						}
+					}
+				},
+				{
+					"name": "Public Module RAG Chat (X-API-Key)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Key",
+								"value": "{{api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendor_id\": \"{{vendor_id}}\",\n  \"module_id\": \"{{module_id}}\",\n  \"question\": \"How are overtime hours calculated?\",\n  \"session_id\": \"{{session_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/v1/public/module-chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"v1",
+								"public",
+								"module-chat"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Chat History & Sessions",
+			"item": [
+				{
+					"name": "Get Sessions by Vendor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/history/sessions/{{vendor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"history",
+								"sessions",
+								"{{vendor_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Messages for Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/history/session/{{session_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"history",
+								"session",
+								"{{session_id}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "11. Billing & Token Tracking",
+			"item": [
+				{
+					"name": "Get Vendor Billing & Token Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/billing/{{vendor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"billing",
+								"{{vendor_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Vendor Status (Active/Inactive)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"active\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/billing/{{vendor_id}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"billing",
+								"{{vendor_id}}",
+								"status"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "12. AI Models Registry",
+			"item": [
+				{
+					"name": "List All Models",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/models",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"models"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Model",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"model_family\": \"gemini\",\n  \"model_name\": \"gemini-2.5-flash\",\n  \"provider\": \"gemini\",\n  \"display_name\": \"Google Gemini 2.5 Flash\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/models",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"models"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Model By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/models/mod_gemini_flash",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"models",
+								"mod_gemini_flash"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "13. Logs & Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get System APM Logs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/logs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logs"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Vendor Specific Logs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/logs/vendor/{{vendor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logs",
+								"vendor",
+								"{{vendor_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Test Redis Connection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/test-redis",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"test-redis"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

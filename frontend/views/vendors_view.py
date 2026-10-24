@@ -41,6 +41,7 @@ def render_vendors_view():
     with tab_create:
         st.subheader("Onboard New Vendor")
         with st.form("create_vendor_form"):
+            custom_id = st.text_input("Custom Vendor ID (Optional)", placeholder="e.g. 5e7dfe83-90c2-4574-83cf-512ee5a4bf8c")
             name = st.text_input("Vendor / Company Name", placeholder="e.g. Acme Payroll Corp")
             description = st.text_area("Description", placeholder="e.g. Multi-national HR & Payroll enterprise client")
             submit = st.form_submit_button("🏢 Create Vendor", use_container_width=True)
@@ -51,8 +52,12 @@ def render_vendors_view():
                 else:
                     try:
                         with st.spinner("Onboarding vendor..."):
-                            resp = APIClient.create_vendor(name=name, description=description)
-                            new_id = resp.get("id") or resp.get("_id") or str(resp)
+                            resp = APIClient.create_vendor(
+                                name=name,
+                                description=description,
+                                vendor_id=custom_id.strip() if custom_id.strip() else None
+                            )
+                            new_id = resp.get("vendor_id") or resp.get("id") or resp.get("_id") or str(resp)
                             st.session_state[StateKeys.ACTIVE_VENDOR_ID] = new_id
                             show_success(f"Vendor '{name}' created successfully! ID: `{new_id}`")
                     except Exception as e:

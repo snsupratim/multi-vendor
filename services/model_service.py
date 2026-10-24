@@ -15,7 +15,7 @@ class ModelService:
             "model_name": payload.model_name,
             "provider": payload.provider,
             "display_name": payload.display_name,
-            "created_by": user["sub"],
+            "created_by": user["sub"] if user and "sub" in user else "SYSTEM",
             "created_at": datetime.now(timezone.utc),
             "updated_by": None,
             "updated_at": None

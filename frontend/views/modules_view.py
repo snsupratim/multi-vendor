@@ -55,8 +55,14 @@ def render_modules_view():
             desc = st.text_area("Description", placeholder="e.g. Global Payroll & Employee Text-to-SQL Analytics Engine")
             system_prompt = st.text_area(
                 "Module System Prompt",
-                value="You are an enterprise Analytics Agent. Generate PostgreSQL queries and analytics components strictly adhering to tenant vendor_id.",
-                height=120
+                value=(
+                    "You are an enterprise Analytics and Text-to-SQL Agent. "
+                    "Generate PostgreSQL queries and analytical components based on user questions. "
+                    "Dynamically infer all filtering identifiers (e.g. company_id, vendor_id, branch_id, org_id, employee_id) "
+                    "and relationships directly from the uploaded table schemas, DDL definitions, knowledge base rules, or user query context. "
+                    "Never assume or hardcode a specific ID column unless it exists in the schema or is specified in the query."
+                ),
+                height=140
             )
             submit_mod = st.form_submit_button("🧩 Create Module", use_container_width=True)
 

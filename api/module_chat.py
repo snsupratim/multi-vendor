@@ -16,7 +16,8 @@ async def internal_module_chat(payload: ModuleChatRequest):
         vendor_id=vendor_id,
         model_family=payload.model_family,
         model_name=payload.model_name,
-        session_id=session_id
+        session_id=session_id,
+        user_context=payload.user_context
     )
     
     return result

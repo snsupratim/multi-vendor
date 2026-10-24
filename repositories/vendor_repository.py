@@ -29,5 +29,5 @@ class VendorRepository:
         vendor_id: str
     ):
         return await cls.collection.find_one(
-            {"vendor_id": vendor_id}
+            {"$or": [{"vendor_id": vendor_id}, {"_id": vendor_id}]}
         )

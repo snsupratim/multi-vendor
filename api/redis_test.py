@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from services.rate_limit_service import redis_client
+from db.redis import redis_client
 
 router = APIRouter()
 

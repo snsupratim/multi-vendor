@@ -57,21 +57,36 @@ class RAGService:
 
             history = await MemoryService.get_history(session_id)
 
-            answer = await ChatService.generate_answer(
-                    question,
-                    chunks,
-                    model_family=model_family,
-                    model_name=model_name,
-                    system_prompt=system_prompt,
-                    history=history
+            gen_result = await ChatService.generate_answer(
+                question,
+                chunks,
+                model_family=model_family,
+                model_name=model_name,
+                system_prompt=system_prompt,
+                history=history
+            )
+
+            answer = gen_result.get("text", "") if isinstance(gen_result, dict) else str(gen_result)
+            usage = gen_result.get("usage", {}) if isinstance(gen_result, dict) else {}
+
+            # Log token usage & update vendor billing
+            if usage and vendor_id:
+                from services.billing_service import BillingService
+                await BillingService.log_usage(
+                    vendor_id=vendor_id,
+                    session_id=session_id,
+                    model_name=model_name or "gemini-2.5-flash",
+                    prompt_tokens=usage.get("prompt_tokens", 0),
+                    completion_tokens=usage.get("completion_tokens", 0)
                 )
-        
+
             await MemoryService.save_turn(session_id, vendor_id, question, answer)
 
             return {
                 "answer": answer,
                 "sources": len(chunks),
-                "session_id": session_id
+                "session_id": session_id,
+                "usage": usage
             }
 
         except ResourceExhausted as ex:

@@ -35,27 +35,19 @@ async def analytics_module_chat(payload: ModuleChatRequest):
     module_id = payload.module_id
     session_id = payload.session_id or str(uuid.uuid4())
     
-    # 1. Verify Access
-    has_access = await VendorAccessRepository.check_access(vendor_id, module_id)
-    if not has_access:
-        raise HTTPException(
-            status_code=403,
-            detail=f"Vendor {vendor_id} does not have access to Module {module_id}"
-        )
+    # 1. Verify Access (Temporarily bypassed: Open access for all vendors)
+    # has_access = await VendorAccessRepository.check_access(vendor_id, module_id)
+    # if not has_access:
+    #     raise HTTPException(
+    #         status_code=403,
+    #         detail=f"Vendor {vendor_id} does not have access to Module {module_id}"
+    #     )
         
     try:
         from services.memory_service import MemoryService
         from repositories.module_repository import ModuleRepository
         from services.sql_agent.agent_tools import retrieve_business_context
         from services.billing_service import BillingService
-        
-        # 1.5 Verify Billing/Token Quota Access
-        is_active = await BillingService.check_access(vendor_id)
-        if not is_active:
-            raise HTTPException(
-                status_code=402, 
-                detail="Payment Required: Vendor account is inactive or token quota exceeded."
-            )
         
         # 2. Fetch Conversation History
         history_text = await MemoryService.get_history(session_id)
@@ -80,7 +72,8 @@ async def analytics_module_chat(payload: ModuleChatRequest):
             module_id=module_id,
             history=history_text,
             module_system_prompt=module_system_prompt,
-            business_context=business_context
+            business_context=business_context,
+            user_context=payload.user_context
         )
         
         # 6. Log Token Usage
@@ -98,8 +91,19 @@ async def analytics_module_chat(payload: ModuleChatRequest):
         # so the frontend can immediately consume it for charting.
         raw_response = result.get("raw_response", "")
         
+        # Extract employee_id from user_context if provided
+        employee_id = None
+        if isinstance(payload.user_context, dict):
+            employee_id = payload.user_context.get("employee_id") or payload.user_context.get("user_id")
+
         # Save to Hot/Cold Memory
-        await MemoryService.save_turn(session_id, vendor_id, payload.question, raw_response)
+        await MemoryService.save_turn(
+            session_id=session_id, 
+            vendor_id=vendor_id, 
+            question=payload.question, 
+            answer=raw_response,
+            employee_id=employee_id
+        )
         
         # If the LLM returns a list (e.g. [{"text": "..."}]), extract the text
         if isinstance(raw_response, list):

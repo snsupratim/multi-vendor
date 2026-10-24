@@ -1,3 +1,4 @@
+from typing import Optional, List, Dict, Any
 from db.mongodb import db
 
 class ChatHistoryRepository:
@@ -10,15 +11,20 @@ class ChatHistoryRepository:
         vendor_id: str,
         role: str,
         content: str,
-        timestamp: str
+        timestamp: str,
+        employee_id: Optional[str] = None,
+        **kwargs: Any
     ):
-        await cls.collection.insert_one({
+        doc = {
             "session_id": session_id,
             "vendor_id": vendor_id,
             "role": role,
             "content": content,
             "timestamp": timestamp
-        })
+        }
+        if employee_id:
+            doc["employee_id"] = employee_id
+        await cls.collection.insert_one(doc)
 
     @classmethod
     async def get_recent_history(
@@ -37,14 +43,19 @@ class ChatHistoryRepository:
         return docs
 
     @classmethod
-    async def get_sessions(cls, vendor_id: str):
+    async def get_sessions(cls, vendor_id: str, employee_id: Optional[str] = None):
+        match_stage = {"vendor_id": vendor_id}
+        if employee_id:
+            match_stage["employee_id"] = employee_id
+
         pipeline = [
-            {"$match": {"vendor_id": vendor_id}},
+            {"$match": match_stage},
             {"$sort": {"timestamp": 1}},
             {"$group": {
                 "_id": "$session_id",
                 "title": {"$first": "$content"},
-                "last_active": {"$last": "$timestamp"}
+                "last_active": {"$last": "$timestamp"},
+                "employee_id": {"$last": "$employee_id"}
             }},
             {"$sort": {"last_active": -1}}
         ]
@@ -56,7 +67,8 @@ class ChatHistoryRepository:
             {
                 "session_id": s["_id"],
                 "title": s["title"][:50] + "..." if len(s["title"]) > 50 else s["title"],
-                "last_active": s["last_active"]
+                "last_active": s["last_active"],
+                "employee_id": s.get("employee_id")
             }
             for s in sessions
         ]

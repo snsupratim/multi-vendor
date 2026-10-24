@@ -49,7 +49,7 @@ class BillingRepository:
         }
         await cls.token_logs.insert_one(log_doc)
         
-        # 2. Update vendor aggregate
+        # 2. Update vendor aggregate (upsert=True so new vendors are automatically created)
         await cls.vendor_billing.update_one(
             {"vendor_id": vendor_id},
             {
@@ -58,8 +58,13 @@ class BillingRepository:
                     "total_prompt_tokens": prompt_tokens,
                     "total_completion_tokens": completion_tokens,
                     "total_tokens": total_tokens
+                },
+                "$setOnInsert": {
+                    "status": "active",
+                    "created_at": datetime.now(timezone.utc)
                 }
-            }
+            },
+            upsert=True
         )
         return True
 

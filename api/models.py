@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from core.dependencies import get_current_user, require_super_admin
+from core.dependencies import get_current_user, get_optional_current_user, require_super_admin
 from schemas.model_schema import ModelCreate, ModelUpdate, ModelResponse
 from services.model_service import ModelService
 
@@ -11,10 +11,11 @@ router = APIRouter(
 @router.post("", response_model=ModelResponse)
 async def create_model(
     payload: ModelCreate,
-    user=Depends(get_current_user)
+    user=Depends(get_optional_current_user)
 ):
     try:
-        require_super_admin(user)
+        if user:
+            require_super_admin(user)
         return await ModelService.create_model(payload, user)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

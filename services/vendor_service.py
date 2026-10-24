@@ -8,6 +8,13 @@ class VendorService:
 
     @staticmethod
     async def create_vendor(payload, user):
+        raw_id = getattr(payload, "id", None) or getattr(payload, "vendor_id", None)
+        vendor_id = raw_id.strip() if raw_id and isinstance(raw_id, str) and raw_id.strip() else str(uuid.uuid4())
+
+        # Check if ID already exists
+        existing_id = await VendorRepository.get_by_vendor_id(vendor_id)
+        if existing_id:
+            raise ValueError(f"Vendor with ID '{vendor_id}' already exists")
 
         existing = await VendorRepository.find_by_name(
             payload.name
@@ -19,7 +26,8 @@ class VendorService:
             )
 
         vendor = {
-            "vendor_id": str(uuid.uuid4()),
+            "_id": vendor_id,
+            "vendor_id": vendor_id,
             "name": payload.name,
             "description": payload.description,
             "status": "ACTIVE",
@@ -35,6 +43,7 @@ class VendorService:
 
         return {
             "vendor_id": vendor["vendor_id"],
+            "id": vendor["vendor_id"],
             "message": "Vendor created successfully"
         }
 
@@ -46,12 +55,13 @@ class VendorService:
         response = []
 
         for vendor in vendors:
-
+            vid = vendor.get("vendor_id") or str(vendor.get("_id"))
             response.append({
-                "vendor_id": vendor["vendor_id"],
+                "vendor_id": vid,
+                "id": vid,
                 "name": vendor["name"],
                 "description": vendor.get("description"),
-                "status": vendor["status"]
+                "status": vendor.get("status", "ACTIVE")
             })
 
         return response
@@ -68,9 +78,11 @@ class VendorService:
                 "Vendor not found"
             )
 
+        vid = vendor.get("vendor_id") or str(vendor.get("_id"))
         return {
-            "vendor_id": vendor["vendor_id"],
+            "vendor_id": vid,
+            "id": vid,
             "name": vendor["name"],
             "description": vendor.get("description"),
-            "status": vendor["status"]
+            "status": vendor.get("status", "ACTIVE")
         }

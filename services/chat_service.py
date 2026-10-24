@@ -26,7 +26,8 @@ class ChatService:
         model_family: str = "gemini",
         model_name: str = "gemini-2.5-flash",
         system_prompt: str = None,
-        history: str = None
+        history: str = None,
+        user_context: dict = None
     ):
 
         try:
@@ -41,9 +42,14 @@ class ChatService:
             
             history_section = f"\nConversation History:\n{history}\n" if history else ""
 
+            user_context_section = ""
+            if user_context and isinstance(user_context, dict):
+                import json
+                user_context_section = f"\nUser / Caller Context:\n{json.dumps(user_context, indent=2)}\n"
+
             prompt = f"""
 {sys_msg}
-
+{user_context_section}
 Use ONLY the provided context.
 
 Context:
@@ -55,14 +61,13 @@ Question:
 Answer:
 """
 
-            answer = await ModelRouter.generate(
-            prompt=prompt,
-            model_family=model_family,
-            model_name=model_name
+            result = await ModelRouter.generate(
+                prompt=prompt,
+                model_family=model_family,
+                model_name=model_name
             )
-            
 
-            return answer
+            return result
 
         except Exception as e:
 

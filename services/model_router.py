@@ -40,7 +40,7 @@ class ModelRouter:
                 model_name=model_name
             )
 
-        if provider == "groq" or family == "llama" or family == "groq":
+        if provider == "groq" or family in ["llama", "groq", "openai"]:
             return await GroqProvider.generate(
                 prompt=prompt,
                 model_name=model_name

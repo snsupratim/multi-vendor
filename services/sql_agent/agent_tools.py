@@ -11,6 +11,8 @@ import json
 class AgentContext:
     vendor_id: str = None
     module_id: str = None
+    last_sql_results: list = None
+    last_sql_query: str = None
 
 @tool
 def retrieve_schema(query: str) -> str:
@@ -106,6 +108,10 @@ async def execute_sql(sql_query: str) -> str:
         
     try:
         results = await SQLExecutionService.execute_query(sql_query, AgentContext.vendor_id)
+        
+        # Save to context so fallback handler can return data even if LLM formatting hits quota/rate limits
+        AgentContext.last_sql_results = results
+        AgentContext.last_sql_query = sql_query
         
         if not results:
             logger.info("execute_sql returned 0 rows.")

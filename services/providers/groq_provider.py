@@ -26,9 +26,20 @@ class GroqProvider:
             ]
         )
 
-        return (
-            response
-            .choices[0]
-            .message
-            .content
-        )
+        text = response.choices[0].message.content
+        prompt_tokens = 0
+        completion_tokens = 0
+        if hasattr(response, "usage") and response.usage:
+            prompt_tokens = getattr(response.usage, "prompt_tokens", 0) or 0
+            completion_tokens = getattr(response.usage, "completion_tokens", 0) or 0
+
+        usage = {
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": prompt_tokens + completion_tokens
+        }
+
+        return {
+            "text": text,
+            "usage": usage
+        }

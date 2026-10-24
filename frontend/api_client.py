@@ -62,9 +62,12 @@ class APIClient:
     # Vendors (Super Admin)
     # -------------------------------------------------------------------------
     @classmethod
-    def create_vendor(cls, name: str, description: Optional[str] = None) -> Dict[str, Any]:
+    def create_vendor(cls, name: str, description: Optional[str] = None, vendor_id: Optional[str] = None) -> Dict[str, Any]:
         url = f"{cls.get_base_url()}/vendors"
-        payload = {"name": name, "description": description}
+        payload: Dict[str, Any] = {"name": name, "description": description}
+        if vendor_id:
+            payload["id"] = vendor_id
+            payload["vendor_id"] = vendor_id
         resp = requests.post(url, json=payload, headers=cls._headers(use_jwt=True))
         return cls._handle_response(resp)
 
@@ -270,8 +273,16 @@ class APIClient:
     # Chat History
     # -------------------------------------------------------------------------
     @classmethod
-    def get_vendor_sessions(cls, vendor_id: str) -> List[Dict[str, Any]]:
+    def get_vendor_sessions(cls, vendor_id: str, employee_id: Optional[str] = None) -> List[Dict[str, Any]]:
         url = f"{cls.get_base_url()}/history/sessions/{vendor_id}"
+        params = {"employee_id": employee_id} if employee_id else {}
+        resp = requests.get(url, params=params)
+        data = cls._handle_response(resp)
+        return data.get("sessions", [])
+
+    @classmethod
+    def get_employee_sessions(cls, vendor_id: str, employee_id: str) -> List[Dict[str, Any]]:
+        url = f"{cls.get_base_url()}/history/sessions/{vendor_id}/{employee_id}"
         resp = requests.get(url)
         data = cls._handle_response(resp)
         return data.get("sessions", [])

@@ -18,5 +18,5 @@ class VendorAccessRepository:
 
     @classmethod
     async def check_access(cls, vendor_id: str, module_id: str) -> bool:
-        doc = await cls.collection.find_one({"vendor_id": vendor_id, "module_id": module_id})
-        return doc is not None
+        # Temporarily bypassed: All vendors have universal access to all modules
+        return True

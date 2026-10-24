@@ -9,12 +9,20 @@ from google.api_core.exceptions import ResourceExhausted
 
 class ModuleRAGService:
     @staticmethod
-    async def ask(question: str, module_id: str, vendor_id: str, model_family: str, model_name: str, session_id: str):
+    async def ask(
+        question: str, 
+        module_id: str, 
+        vendor_id: str, 
+        model_family: str, 
+        model_name: str, 
+        session_id: str,
+        user_context: dict = None
+    ):
         try:
-            # 1. Authorize
-            has_access = await VendorAccessRepository.check_access(vendor_id, module_id)
-            if not has_access:
-                raise HTTPException(status_code=403, detail="Vendor does not have access to this module")
+            # 1. Authorize (Temporarily bypassed: Open access for all vendors)
+            # has_access = await VendorAccessRepository.check_access(vendor_id, module_id)
+            # if not has_access:
+            #     raise HTTPException(status_code=403, detail="Vendor does not have access to this module")
             
             # 2. Fetch module
             module_doc = await ModuleRepository.get_by_module_id(module_id)
@@ -34,17 +42,49 @@ class ModuleRAGService:
             history = await MemoryService.get_history(session_id)
             
             # 5. Generate
-            answer = await ChatService.generate_answer(
-                question, chunks, model_family=model_family, model_name=model_name, system_prompt=system_prompt, history=history
+            gen_result = await ChatService.generate_answer(
+                question, 
+                chunks, 
+                model_family=model_family, 
+                model_name=model_name, 
+                system_prompt=system_prompt, 
+                history=history,
+                user_context=user_context
             )
+
+            answer = gen_result.get("text", "") if isinstance(gen_result, dict) else str(gen_result)
+            usage = gen_result.get("usage", {}) if isinstance(gen_result, dict) else {}
             
+            # 6. Log Token Usage & Vendor Billing
+            if usage:
+                from services.billing_service import BillingService
+                await BillingService.log_usage(
+                    vendor_id=vendor_id,
+                    session_id=session_id,
+                    model_name=model_name or "gemini-2.5-flash",
+                    prompt_tokens=usage.get("prompt_tokens", 0),
+                    completion_tokens=usage.get("completion_tokens", 0)
+                )
+            
+            # Extract employee_id from user_context if provided
+            employee_id = None
+            if isinstance(user_context, dict):
+                employee_id = user_context.get("employee_id") or user_context.get("user_id")
+
             # Save to Hot/Cold Memory
-            await MemoryService.save_turn(session_id, vendor_id, question, answer)
+            await MemoryService.save_turn(
+                session_id=session_id, 
+                vendor_id=vendor_id, 
+                question=question, 
+                answer=answer,
+                employee_id=employee_id
+            )
             
             return {
                 "answer": answer,
                 "sources": len(chunks),
-                "session_id": session_id
+                "session_id": session_id,
+                "usage": usage
             }
             
         except HTTPException:

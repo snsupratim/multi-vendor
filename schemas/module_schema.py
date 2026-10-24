@@ -19,5 +19,6 @@ class ModuleChatRequest(BaseModel):
     vendor_id: str
     question: str
     model_family: Optional[str] = "gemini"
-    model_name: Optional[str] = "gemini-2.5-flash"
+    model_name: Optional[str] = "gemini-3.8-flash"
     session_id: Optional[str] = None
+    user_context: Optional[dict] = None
